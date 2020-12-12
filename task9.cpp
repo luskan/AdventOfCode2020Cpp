@@ -26,12 +26,12 @@ unsigned long task9::solve1() {
     auto cur = entries[n];
     bool isOk = false;
     for (int n1 = n - preamble; n1 < n; ++n1) {
-      u_long n1v = entries[n1];
+      uint32_t n1v = entries[n1];
       if (used[n1])
         continue;
       for (int n2 = n1 + 1; n2 < n; ++n2) {
-        u_long n1v = entries[n1];
-        u_long n2v = entries[n2];
+        uint32_t n1v = entries[n1];
+        uint32_t n2v = entries[n2];
         if (used[n2])
           continue;
         if (n1v + n2v == cur) {
@@ -53,14 +53,14 @@ unsigned long task9::solve1() {
 }
 
 void task9::solve2() {
-  u_long val = solve1();
-  std::vector<u_long> vals;
+  uint32_t val = solve1();
+  std::vector<uint32_t> vals;
   for (int n = 0; n < entries.size(); ++n) {
     vals.clear();
-    u_long v1 = entries[n];
+    uint32_t v1 = entries[n];
     vals.push_back(v1);
     for (int k = n + 1; k < entries.size(); ++k) {
-      u_long v2 = entries[k];
+      uint32_t v2 = entries[k];
       vals.push_back(v2);
       auto sum = std::accumulate(vals.begin(), vals.end(), 0);
       if (val < sum)

@@ -8,7 +8,7 @@
 #include <vector>
 
 class task9 {
-  std::vector<u_long> entries;
+  std::vector<uint32_t> entries;
 public:
   task9();
   unsigned long solve1();

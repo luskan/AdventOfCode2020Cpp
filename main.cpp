@@ -10,6 +10,7 @@
 #include "task9.h"
 #include "task10.h"
 #include "task11.h"
+#include "task12.h"
 
 int main() {
   //Task1 task1;
@@ -42,8 +43,11 @@ int main() {
   //task10 task10;
   //task10.solve2b();
 
-  task11 task11;
-  task11.solve2();
+  //task11 task11;
+  //task11.solve2();
+
+  task12 task12;
+  task12.solve2();
 
   return 0;
 }
