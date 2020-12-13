@@ -7,8 +7,6 @@
 #include <fstream>
 #include <regex>
 #include <iostream>
-#include <chrono>
-#include <thread>
 
 task13::task13() {
     std::ifstream ifs("../data13.txt");
