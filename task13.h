@@ -11,6 +11,7 @@ class task13 {
     struct data {
         int id;
         int waitTime;
+        uint64_t lastTsWithMatch;
     };
     int startTimestamp;
     std::vector<data> entries;
@@ -19,7 +20,7 @@ public:
     void solve1();
     void solve2();
 
-    void runSolve2(uint64_t start, int id, int increment);
+    uint64_t findSolution2();
 };
 
 
