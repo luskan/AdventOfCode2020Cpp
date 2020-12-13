@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include "task3.h"
+#include <string>
 
 Task3::Task3() {
   std::ifstream ifs("../data3.txt");

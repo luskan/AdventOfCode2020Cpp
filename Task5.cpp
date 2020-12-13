@@ -6,7 +6,7 @@
 
 #include <fstream>
 #include <iostream>
-
+#include <algorithm>
 Task5::Task5() {
   std::fstream fs("../data5.txt");
   std::string line;

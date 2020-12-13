@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
+#include <string>
 
 task10::task10() {
   std::ifstream ifs("../data10.txt");
@@ -37,7 +39,7 @@ void task10::solve2() {
   std::vector<int> diffs;
   computeDiffs(entries, diffs);
 
-  u_int64_t wtj = 1;
+  uint64_t wtj = 1;
   std::vector<int> subRange;
   for (size_t i = 0; i < diffs.size() ; ++i) {
     if (diffs[i] == 3)
@@ -66,7 +68,7 @@ void task10::solve2b() {
   std::vector<int> ents = entries;
   computeDiffs(ents, diffs);
 
-   u_int64_t wtj = 1;
+    uint64_t wtj = 1;
 
    std::vector<int> subDiffs;
    for (size_t i = 0; i < diffs.size() ; ++i) {
@@ -103,8 +105,8 @@ bool task10::computeDiffs(std::vector<int>& inEntries, std::vector<int>& diffs) 
   return true;
 }
 
-u_int64_t task10::compute(int startFrom, std::vector<int>& diffs) {
-  u_int64_t total = 1;
+uint64_t task10::compute(int startFrom, std::vector<int>& diffs) {
+  uint64_t total = 1;
 
   for (size_t i = startFrom; i < diffs.size() - 1; ++i) {
     int diff = diffs[i];

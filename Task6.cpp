@@ -7,7 +7,7 @@
 #include <fstream>
 #include <set>
 #include <iostream>
-
+#include <algorithm>
 Task6::Task6() {
   std::ifstream ifs("../data6.txt");
   std::string line;

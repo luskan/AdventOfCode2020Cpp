@@ -7,6 +7,8 @@
 #include <fstream>
 #include <regex>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 task13::task13() {
     std::ifstream ifs("../data13.txt");
@@ -49,7 +51,25 @@ void task13::solve1() {
 }
 
 void task13::solve2() {
-    u_int64_t ts=0;
+    //runSolve2(0,entries[0].id); return;
+    std::vector<std::thread> ths;
+    int threads = 24;
+    for (size_t i = 0; i < threads; ++i) {
+        if (entries[i].id == -1)
+            continue;
+        int addTry = std::max(1,(((entries[i].id) / entries[0].id) - 1)) * entries[0].id;
+        //std::numeric_limits<uint64_t>::max()
+        int id = entries[i].id;
+        ths.push_back(std::thread([&,addTry,id,i](){
+            runSolve2((1467900241541773/threads)*i, id,addTry);
+        }));
+    }
+    for (auto& th : ths)
+        th.join();
+}
+
+void task13::runSolve2(uint64_t start, int id, int increment) {
+    uint64_t ts=start;
     int id1 = entries[0].id;
 
     auto it = std::max_element(entries.begin(), entries.end(),
@@ -63,16 +83,16 @@ void task13::solve2() {
             int curId = entries[i].id;
             if (curId == -1)
                 continue;
-            u_int64_t t1 = ts / curId;
-            u_int64_t t2 = t1 * curId;
-            u_int64_t t3 = t2 + curId;
+            uint64_t t1 = ts / curId;
+            uint64_t t2 = t1 * curId;
+            uint64_t t3 = t2 + curId;
 
             int diff = t3 - ts;
             if (diff > maxDiff)
                 maxDiff = diff;
             if (diff != i) {
                 foundBadOne = true;
-                //break;
+                break;
             }
         }
         if (!foundBadOne && ts != 0) {
@@ -83,3 +103,54 @@ void task13::solve2() {
         ts += add;
     }
 }
+
+#if 0
+void task13::runSolve2(int id, int increment) {
+    uint64_t ts=0;
+    int id1 = entries[0].id;
+
+    auto it = std::max_element(entries.begin(), entries.end(),
+                               [](const auto& el1, const auto& el2){ return el1.id < el2.id; });
+    int incts = id1;
+
+    //std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
+    int add = increment;
+    bool foundBadOne = false;
+    while(true) {
+
+        for (size_t i = 1; i < entries.size(); ++i) {
+            int curId = entries[i].id;
+            if (curId == -1)
+                continue;
+            uint64_t t1 = ts / curId;
+            uint64_t t2 = t1 * curId;
+            uint64_t t3 = t2 + curId;
+
+            int diff = t3 - ts;
+            //int addTry = std::max(1,((diff / id1) - 1)) * id1;
+            //if (addTry > add)
+            //    add = addTry;
+            if (diff != i) {
+                foundBadOne = true;
+                break;
+            }
+        }
+        if (!foundBadOne && ts != 0) {
+            std::cout << "> Found: " << ts <<std::endl;
+            break;
+        }
+
+/*
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+        if (std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() > 10) {
+            begin = std::chrono::steady_clock::now();
+            //std::cout << "> " << ts <<std::endl;
+        }
+*/
+        ts += add;
+    }
+}
+
+#endif

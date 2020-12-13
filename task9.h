@@ -6,7 +6,7 @@
 #define ADVENTOFCODE2020_TASK9_H
 
 #include <vector>
-
+#include <stdint.h>
 class task9 {
   std::vector<uint32_t> entries;
 public:

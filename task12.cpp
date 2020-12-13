@@ -1,12 +1,14 @@
 //
 // Created by Marcin Jędrzejewski on 12/12/2020.
 //
+#define _USE_MATH_DEFINES // for C++
 
 #include "task12.h"
 #include <fstream>
 #include <iostream>
 #include <regex>
 #include <complex>
+
 #include <cmath>
 
 task12::task12() {

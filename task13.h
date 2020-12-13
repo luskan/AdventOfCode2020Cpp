@@ -18,6 +18,8 @@ public:
     task13();
     void solve1();
     void solve2();
+
+    void runSolve2(uint64_t start, int id, int increment);
 };
 
 

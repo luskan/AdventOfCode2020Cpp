@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
+#include <string>
 
 task9::task9() {
   std::ifstream ifs("../data9.txt");

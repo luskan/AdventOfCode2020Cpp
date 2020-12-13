@@ -6,6 +6,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
 task11::task11() {
   std::ifstream ifs("../data11.txt");

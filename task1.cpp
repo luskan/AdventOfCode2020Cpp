@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 #include "task1.h"
 
 void Task1::solve1() {

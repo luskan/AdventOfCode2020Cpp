@@ -6,6 +6,7 @@
 #define ADVENTOFCODE2020_TASK10_H
 
 #include <vector>
+#include <cstdint>
 
 class task10 {
   std::vector<int> entries;
@@ -16,7 +17,7 @@ public:
 
   bool computeDiffs(std::vector<int>& vector, std::vector<int>& vector1);
 
-  u_int64_t compute(int startFrom,  std::vector<int>& diffs);
+    uint64_t compute(int startFrom,  std::vector<int>& diffs);
 
   void solve2b();
 };
