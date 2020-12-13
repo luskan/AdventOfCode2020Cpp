@@ -6,6 +6,7 @@
 #define ADVENTOFCODE2020_TASK13_H
 
 #include <vector>
+#include <cstdint>
 
 class task13 {
     struct data {
