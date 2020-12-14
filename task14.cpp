@@ -1,0 +1,131 @@
+//
+// Created by Marcin Jędrzejewski on 14/12/2020.
+//
+
+#include "task14.h"
+
+#include <fstream>
+#include <iostream>
+#include <regex>
+#include <map>
+
+task14::task14() {
+    std::ifstream ifs("../data14.txt");
+    std::string line;
+
+    std::regex rg_mask(R"(mask = ([01X]+))");
+    std::regex rg_assign(R"(mem\[(\d+)\] = (\d+))");
+
+    data d;
+    int maskCount = 0;
+    while(std::getline(ifs, line)) {
+        std::smatch sm;
+
+        if (std::regex_match(line, sm, rg_mask)) {
+            if (maskCount > 0) {
+                entries.push_back(d);
+                d = {};
+            }
+            d.mask = sm[1];
+            maskCount++;
+        }
+        else if (std::regex_match(line, sm, rg_assign)) {
+            d.assings.push_back({std::stoi(sm[1]), std::stoi(sm[2])});
+        }
+        else {
+            throw "Wrong parsing!";
+        }
+    }
+    entries.push_back(d);
+}
+
+void task14::solve1() {
+    std::map<uint64_t, uint64_t> mem;
+    for (size_t i = 0; i != entries.size(); ++i) {
+        std::string& mask = entries[i].mask;
+        uint64_t mask_set_ones = 0;
+        uint64_t mask_set_zeros = 0;
+        for (int i = mask.size()-1; i >= 0; --i) {
+            uint64_t bitToSet = (mask.size()-1-i);
+            if (mask[i] == '1')
+                mask_set_ones |= (1LL << bitToSet);
+            if (mask[i] == '0')
+                mask_set_zeros |= (1LL << bitToSet);
+        }
+        for (size_t k = 0; k < entries[i].assings.size(); ++k) {
+            uint64_t addr = std::get<0>(entries[i].assings[k]);
+            uint64_t arg = std::get<1>(entries[i].assings[k]);
+            arg |= mask_set_ones;
+            arg &= ~mask_set_zeros;
+            mem[addr] = arg;
+        }
+    }
+    uint64_t sum = 0;
+    for (auto [key,value] : mem) {
+        sum += value;
+    }
+
+    //correct: 17481577045893
+    std::cout << "Sum: " << sum << std::endl;
+}
+
+void task14::solve2() {
+    std::map<uint64_t, uint64_t> mem;
+
+    for (size_t i = 0; i != entries.size(); ++i) {
+        std::string& mask = entries[i].mask;
+
+        // Setup initial mask, and count how many floating bits exists.
+        uint64_t mask_set_ones_org = 0;
+        int floatingCount = 0;
+        for (int i = mask.size()-1; i >= 0; --i) {
+            uint64_t bitToSet = (mask.size()-1-i);
+            if (mask[i] == '1')
+                mask_set_ones_org |= (1LL << bitToSet);
+            if (mask[i] == 'X')
+                floatingCount++;
+        }
+
+        for (size_t k = 0; k < entries[i].assings.size(); ++k) {
+            uint64_t addr = std::get<0>(entries[i].assings[k]);
+            uint64_t arg = std::get<1>(entries[i].assings[k]);
+
+            // If there are floating positions...
+            if (floatingCount != 0) {
+
+                //then iterate all its possible combinations.
+                for (uint64_t fcount = 0; fcount < pow(2, floatingCount); ++fcount) {
+                    addr = std::get<0>(entries[i].assings[k]);
+                    uint64_t fcountIt = 0;
+                    uint64_t mask_set_ones = mask_set_ones_org;
+                    uint64_t mask_set_zeros = 0;
+                    for (int i = mask.size() - 1; i >= 0; --i) {
+                        if (mask[i] == 'X') {
+                            bool b = fcount & (1LL << fcountIt);
+                            uint64_t bitToSet = (mask.size() - 1 - i);
+                            if (b)
+                                mask_set_ones |= (1LL << bitToSet);
+                            else
+                                mask_set_zeros |= (1LL << bitToSet);
+                            fcountIt++;
+                        }
+                    }
+                    addr |= mask_set_ones;
+                    addr &= ~mask_set_zeros;
+                    mem[addr] = arg;
+                }
+            }
+            else {
+                addr |= mask_set_ones_org;
+                mem[addr] = arg;
+            }
+        }
+    }
+    uint64_t sum = 0;
+    for (auto [key,value] : mem) {
+        sum += value;
+    }
+
+    //accepted: 4160009892257
+    std::cout << "Sum: " << sum << std::endl;
+}
