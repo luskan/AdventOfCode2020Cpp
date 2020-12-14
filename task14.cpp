@@ -48,9 +48,9 @@ void task14::solve1() {
         for (int i = mask.size()-1; i >= 0; --i) {
             uint64_t bitToSet = (mask.size()-1-i);
             if (mask[i] == '1')
-                mask_set_ones |= (1LL << bitToSet);
+                mask_set_ones |= (1ULL << bitToSet);
             if (mask[i] == '0')
-                mask_set_zeros |= (1LL << bitToSet);
+                mask_set_zeros |= (1ULL << bitToSet);
         }
         for (size_t k = 0; k < entries[i].assings.size(); ++k) {
             uint64_t addr = std::get<0>(entries[i].assings[k]);
@@ -66,7 +66,7 @@ void task14::solve1() {
     }
 
     //correct: 17481577045893
-    std::cout << "Sum: " << sum << std::endl;
+    std::cout << "Solve1: " << sum << std::endl;
 }
 
 void task14::solve2() {
@@ -81,7 +81,7 @@ void task14::solve2() {
         for (int i = mask.size()-1; i >= 0; --i) {
             uint64_t bitToSet = (mask.size()-1-i);
             if (mask[i] == '1')
-                mask_set_ones_org |= (1LL << bitToSet);
+                mask_set_ones_org |= (1ULL << bitToSet);
             if (mask[i] == 'X')
                 floatingCount++;
         }
@@ -101,12 +101,12 @@ void task14::solve2() {
                     uint64_t mask_set_zeros = 0;
                     for (int i = mask.size() - 1; i >= 0; --i) {
                         if (mask[i] == 'X') {
-                            bool b = fcount & (1LL << fcountIt);
+                            bool b = fcount & (1ULL << fcountIt);
                             uint64_t bitToSet = (mask.size() - 1 - i);
                             if (b)
-                                mask_set_ones |= (1LL << bitToSet);
+                                mask_set_ones |= (1ULL << bitToSet);
                             else
-                                mask_set_zeros |= (1LL << bitToSet);
+                                mask_set_zeros |= (1ULL << bitToSet);
                             fcountIt++;
                         }
                     }
@@ -127,5 +127,5 @@ void task14::solve2() {
     }
 
     //accepted: 4160009892257
-    std::cout << "Sum: " << sum << std::endl;
+    std::cout << "Solve2: " << sum << std::endl;
 }

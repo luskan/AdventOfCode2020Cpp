@@ -55,5 +55,6 @@ int main() {
     //task13.solve2();
 
     task14 task14;
+    task14.solve1();
     task14.solve2();
 }
