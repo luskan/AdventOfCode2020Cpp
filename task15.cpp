@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include <string>
+#include <cassert>
+#include <unordered_map>
 
 task15::task15() {
 
@@ -28,6 +30,7 @@ void task15::solve1() {
     assert(findSolution({3, 2, 1}, 2020) == 438);
     assert(findSolution({3, 1, 2}, 2020) == 1836);
 
+    // correct: 536
     std::cout << "Solution: " << findSolution({1, 2, 16, 19, 18, 0}, 2020) << std::endl;
 }
 
@@ -43,34 +46,33 @@ void task15::solve2() {
        */
 
     assert(findSolution({0, 3, 6}, 30000000) == 175594);
-    std::cout << "Test 1 ok" << std::endl;
     assert(findSolution({1, 3, 2}, 30000000) == 2578);
-    std::cout << "Test 2 ok" << std::endl;
     assert(findSolution({2, 1, 3}, 30000000) == 3544142);
-    std::cout << "Test 3 ok" << std::endl;
     assert(findSolution({1, 2, 3}, 30000000) == 261214);
-    std::cout << "Test 4 ok" << std::endl;
     assert(findSolution({2, 3, 1}, 30000000) == 6895259);
-    std::cout << "Test 5 ok" << std::endl;
     assert(findSolution({3, 2, 1}, 30000000) == 18);
-    std::cout << "Test 6 ok" << std::endl;
     assert(findSolution({3, 1, 2}, 30000000) == 362);
-    std::cout << "Test 7 ok" << std::endl;
 
+    // correct: 24065124
     std::cout << "Solution: " << findSolution({1, 2, 16, 19, 18, 0}, 30000000) << std::endl;
 }
 
 int task15::findSolution(std::vector<int> nums, int turnToStop) {
+    std::unordered_map<int, uint64_t> cache;
+    for (size_t i = 0; i < nums.size() - 1; ++i)
+        cache[nums[i]] = i;
     nums.reserve(turnToStop);
     while(true) {
         int onTop = nums.back();
-        auto it = std::find(nums.rbegin()+1, nums.rend(), onTop);
-        if (it == nums.rend())
+        auto it = cache.find(onTop);
+        if (it == cache.end()) {
             nums.push_back(0);
+        }
         else {
-            int dist = std::distance(nums.rbegin(), it);
+            int dist = nums.size() - 1 - it->second;
             nums.push_back(dist);
         }
+        cache[onTop] = nums.size() - 2;
         if (nums.size() == turnToStop)
             return nums.back();
     }
