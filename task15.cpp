@@ -1,0 +1,77 @@
+//
+// Created by Marcin Jędrzejewski on 15/12/2020.
+//
+
+#include "task15.h"
+
+#include <iostream>
+#include <string>
+
+task15::task15() {
+
+}
+
+void task15::solve1() {
+    /*
+    Given the starting numbers 1,3,2, the 2020th number spoken is 1.
+    Given the starting numbers 2,1,3, the 2020th number spoken is 10.
+    Given the starting numbers 1,2,3, the 2020th number spoken is 27.
+    Given the starting numbers 2,3,1, the 2020th number spoken is 78.
+    Given the starting numbers 3,2,1, the 2020th number spoken is 438.
+    Given the starting numbers 3,1,2, the 2020th number spoken is 1836.
+    */
+
+    assert(findSolution({1, 3, 2}, 2020) == 1);
+    assert(findSolution({2, 1, 3}, 2020) == 10);
+    assert(findSolution({1, 2, 3}, 2020) == 27);
+    assert(findSolution({2, 3, 1}, 2020) == 78);
+    assert(findSolution({3, 2, 1}, 2020) == 438);
+    assert(findSolution({3, 1, 2}, 2020) == 1836);
+
+    std::cout << "Solution: " << findSolution({1, 2, 16, 19, 18, 0}, 2020) << std::endl;
+}
+
+void task15::solve2() {
+    /*
+      Given 0,3,6, the 30000000th number spoken is 175594.
+      Given 1,3,2, the 30000000th number spoken is 2578.
+      Given 2,1,3, the 30000000th number spoken is 3544142.
+      Given 1,2,3, the 30000000th number spoken is 261214.
+      Given 2,3,1, the 30000000th number spoken is 6895259.
+      Given 3,2,1, the 30000000th number spoken is 18.
+      Given 3,1,2, the 30000000th number spoken is 362.
+       */
+
+    assert(findSolution({0, 3, 6}, 30000000) == 175594);
+    std::cout << "Test 1 ok" << std::endl;
+    assert(findSolution({1, 3, 2}, 30000000) == 2578);
+    std::cout << "Test 2 ok" << std::endl;
+    assert(findSolution({2, 1, 3}, 30000000) == 3544142);
+    std::cout << "Test 3 ok" << std::endl;
+    assert(findSolution({1, 2, 3}, 30000000) == 261214);
+    std::cout << "Test 4 ok" << std::endl;
+    assert(findSolution({2, 3, 1}, 30000000) == 6895259);
+    std::cout << "Test 5 ok" << std::endl;
+    assert(findSolution({3, 2, 1}, 30000000) == 18);
+    std::cout << "Test 6 ok" << std::endl;
+    assert(findSolution({3, 1, 2}, 30000000) == 362);
+    std::cout << "Test 7 ok" << std::endl;
+
+    std::cout << "Solution: " << findSolution({1, 2, 16, 19, 18, 0}, 30000000) << std::endl;
+}
+
+int task15::findSolution(std::vector<int> nums, int turnToStop) {
+    while(true) {
+        int onTop = nums.back();
+        auto it = std::find(nums.rbegin()+1, nums.rend(), onTop);
+        if (it == nums.rend())
+            nums.push_back(0);
+        else {
+            int dist = std::distance(nums.rbegin(), it);
+            nums.push_back(dist);
+        }
+        if (nums.size() == turnToStop)
+            return nums.back();
+    }
+    return 0;
+}
