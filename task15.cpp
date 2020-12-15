@@ -61,6 +61,7 @@ void task15::solve2() {
 }
 
 int task15::findSolution(std::vector<int> nums, int turnToStop) {
+    nums.reserve(turnToStop);
     while(true) {
         int onTop = nums.back();
         auto it = std::find(nums.rbegin()+1, nums.rend(), onTop);
