@@ -99,6 +99,6 @@ void task18::solve2() {
     load(true);
     uint64_t total = solve();
 
-    // correct : 53660285675207
+    // correct : 141993988282687
     std::cout << "Solve 2 - Total: " << total << std::endl;
 }
