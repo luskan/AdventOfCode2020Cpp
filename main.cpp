@@ -76,5 +76,6 @@ int main() {
 
     task18 task18;
     task18.solve1();
+    task18.solve2();
 
 }

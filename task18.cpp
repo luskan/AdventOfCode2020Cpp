@@ -6,109 +6,99 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <stack>
+#include <map>
 
 task18::task18() {
+}
+
+void task18::load(bool solve2) {
     std::fstream ifs("../data18.txt");
     std::string line;
+    std::stack<char> stack;
+    std::map<char, int> precendence = {
+            {')', 6},
+            {'*', 4},
+            {'+', solve2 ? 5 : 4},
+            {'(', 0},
+    };
+
+    rpn_expressions.clear();
     while(std::getline(ifs, line)) {
-        std::shared_ptr cur_ptr = std::make_shared<Node>();
-        ops.push_back(cur_ptr);
+        expr_t queue;
         for (int i = 0; i < line.size(); ++i) {
             auto c = line[i];
             if (c == ' ')
                 continue;
             if (c == '(') {
-                cur_ptr->sub = std::make_shared<Node>();
-                cur_ptr->sub->type = type_t::ParenOpen;
-                cur_ptr->sub->parent = cur_ptr;
-                cur_ptr = cur_ptr->sub;
+                stack.push(c);
             }
             else if (c == ')') {
-                cur_ptr->sub = std::make_shared<Node>();
-                cur_ptr->sub->type = type_t::ParenClose;
-                cur_ptr->sub->parent = cur_ptr;
-                cur_ptr = cur_ptr->sub;
+              while(stack.top() != '(') {
+                  char nc = stack.top();
+                  stack.pop();
+                  queue.push_back(nc);
+              }
+              stack.pop();
             }
-            else if (c == '+') {
-                cur_ptr->sub = std::make_shared<Node>();
-                cur_ptr->sub->type = type_t::Add;
-                cur_ptr->sub->parent = cur_ptr;
-                cur_ptr = cur_ptr->sub;
-            }
-            else if (c == '*') {
-                cur_ptr->sub = std::make_shared<Node>();
-                cur_ptr->sub->type = type_t::Mul;
-                cur_ptr->sub->parent = cur_ptr;
-                cur_ptr = cur_ptr->sub;
+            else if (precendence.contains(c)) {
+                while (!stack.empty() && precendence[c] <= precendence[stack.top()]) {
+                    queue.push_back(stack.top());
+                    stack.pop();
+                }
+                stack.push(c);
             }
             else if (c >= '0' && c <= '9') {
-                int n = i + 1;
-                while (line[n] >= '0' && line[n] <= '9') n++;
-                cur_ptr->sub = std::make_shared<Node>();
-                std::string num = line.substr(i, n-i);
-                if (num.size() != 1 || !(num[0] >= '0' && num[0] <= '9'))
-                    throw "Invalid number";
-                int val = std::stoi(num);
-                cur_ptr->sub->arg = val;
-                cur_ptr->sub->type = type_t::Arg;
-                cur_ptr->sub->parent = cur_ptr;
-                cur_ptr = cur_ptr->sub;
+               queue.push_back(c);
             }
             else {
                 throw "Invalid input!";
             }
         }
+        while(!stack.empty()) {
+            queue.push_back(stack.top());
+            stack.pop();
+        }
+        rpn_expressions.push_back(std::move(queue));
     }
 }
 
-int64_t task18::solve_eq(std::shared_ptr<Node>& eq) {
-    eq = eq->sub;
-    int64_t sum = 0;
-    type_t last_op = type_t::None;
-    while (true) {
-        if (eq->type == type_t::Mul) {
-            last_op = eq->type;
+uint64_t task18::solve() {
+    uint64_t total = 0;
+    for (auto eq : rpn_expressions) {
+        std::stack<uint64_t> stack;
+        for (char c : eq) {
+            if (c == '+' || c == '*') {
+                uint64_t right = stack.top();
+                stack.pop();
+                uint64_t left = stack.top();
+                stack.pop();
+                if (c == '+')
+                    stack.push(left + right);
+                if (c == '*')
+                    stack.push(left * right);
+            }
+            else
+                stack.push(c - '0');
         }
-        else if (eq->type == type_t::Add) {
-            last_op = eq->type;
-        }
-        else if (eq->type == type_t::Arg) {
-
-            if (last_op == type_t::None)
-                sum = eq->arg;
-            else if (last_op == type_t::Add)
-                sum += eq->arg;
-            else if (last_op == type_t::Mul)
-                sum *= eq->arg;
-        }
-        else if (eq->type == type_t::ParenOpen) {
-            if (last_op == type_t::Add)
-                sum += solve_eq(eq);
-            else if (last_op == type_t::Mul)
-                sum *= solve_eq(eq);
-            else if (last_op == type_t::None)
-                sum = solve_eq(eq);
-        }
-        else if (eq->type == type_t::ParenClose) {
-            return sum;
-        }
-        if (!eq->sub)
-            return sum;
-        eq = eq->sub;
+        total += stack.top();
+        stack.pop();
     }
-    return sum;
+    return total;
 }
 
 void task18::solve1() {
-    uint64_t total = 0;
-    for (auto eq : ops) {
-        auto eq_val = solve_eq(eq);;
-        total += eq_val;
-    }
+    load(false);
+    uint64_t total = solve();
+
     // correct : 53660285675207
-    std::cout << "Total: " << total << std::endl;
+    std::cout << "Solve 1 - total: " << total << std::endl;
 }
 
 void task18::solve2() {
+    load(true);
+    uint64_t total = solve();
 
+    // correct : 53660285675207
+    std::cout << "Solve 2 - Total: " << total << std::endl;
 }
