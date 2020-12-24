@@ -71,10 +71,18 @@ task20::task20() {
         images[img.id] = std::move(img);
     }
 
+    // Do the initiali image border by border classification.
     classify_images();
 }
 
 void task20::classify_images() {
+
+    // For each image rotation, store all its four borders in std::strings with additional prefix
+    // indicating whether its is top/right/bottom or left. Then put it in the map with border with prefix
+    // as key and value is the data on which border/image/rotation it belongs it. The same four borders are
+    // used as entries to the same map but with changed prefixes - this time top (_t) border prefix is changed
+    // to bottom (_b) - this way we match this image borders with other borders from different tile images.
+
     for (auto& [id, im] : images) {
         for (size_t flipped_image_index = 0; flipped_image_index < im.rotated_flipped_images.size(); ++flipped_image_index) {
             auto& rotated_im = im.rotated_flipped_images[flipped_image_index];
@@ -88,16 +96,17 @@ void task20::classify_images() {
                 left += *line.begin();
             }
 
+            // All edges.
             std::vector<edge> rot_img_edges;
             rot_img_edges.push_back(top);
             rot_img_edges.push_back(right);
             rot_img_edges.push_back(bottom);
             rot_img_edges.push_back(left);
-            im.images_edges.push_back(rot_img_edges);
+            im.images_edges.push_back(std::move(rot_img_edges));
 
             // Insert this image edges as new entries.
             int n = 0;
-            for (auto &edg : rot_img_edges) {
+            for (auto &edg : im.images_edges.back()) {
                 std::string sufix;
                 if (n == 0)
                     sufix = "_t";
@@ -109,13 +118,14 @@ void task20::classify_images() {
                     sufix = "_l";
                 else
                     throw "WTF!";
-                classified_imgs_map[edg + sufix].insert(std::make_tuple(im.id, im.images_edges.size() - 1, true, n, flipped_image_index));
+                classified_imgs_map[edg + sufix].insert(
+                        std::make_tuple(im.id, im.images_edges.size() - 1, true, n, flipped_image_index));
                 n++;
             }
 
             // Insert this image edges as matching other entries.
             n = 0;
-            for (auto &edg : rot_img_edges) {
+            for (auto &edg : im.images_edges.back()) {
                 std::string sufix;
                 if (n == 0)
                     sufix = "_b";
