@@ -39,7 +39,6 @@ task20::task20() {
         if (!std::regex_match(line, sm, rg))
             throw "Invalid format!";
 
-        img.title = sm[1];
         img.id = std::stoi(sm[1]);
 
         img_data img_d;
@@ -119,7 +118,7 @@ void task20::classify_images() {
                 else
                     throw "WTF!";
                 classified_imgs_map[edg + sufix].insert(
-                        std::make_tuple(im.id, im.images_edges.size() - 1, true, n, flipped_image_index));
+                        std::make_tuple(im.id, im.images_edges.size() - 1, true));
                 n++;
             }
 
@@ -138,12 +137,14 @@ void task20::classify_images() {
                 else
                     throw "WTF!";
                 std::string edge_check = edg + sufix;
-                classified_imgs_map[edge_check].insert(std::make_tuple(im.id, im.images_edges.size() - 1, false, n, flipped_image_index));
+                classified_imgs_map[edge_check].insert(std::make_tuple(im.id, im.images_edges.size() - 1, false));
                 n++;
             }
         }
     }
 
+    // We have now map of borders with images assigned to them, we now know which image (its transformation)
+    // is near any other image. For each image, find its nearby images.
     for (auto& [edge, id_set] : classified_imgs_map) {
         for (auto& id : id_set) {
             int id_1 = std::get<0>(id);
@@ -170,7 +171,7 @@ void task20::classify_images() {
 void task20::solve1() {
 
     // We have computed all possibly rotation of each image, then for each image rotation classified their edges to find
-    // nearby images. Now we want to find edge images, to do this we find images for each rotations will have at most
+    // nearby images. Now we want to find corner images, to do this we find images for each rotations will have at most
     // 2 nearby images.
 
     // Variable for result.
@@ -199,6 +200,201 @@ void task20::solve1() {
     // Correct answer: 17032646100079
     std::cout << "Solution 1: " << total << std::endl;
 }
+
+void task20::solve2() {
+
+    // Here we will reconstruct image, to do this we will start from top left corner (candidates for it are
+    // found in solve1()). Then for each image we will construct nearby images.
+
+    using img_x_t = int;
+    using img_y_t = int;
+    using top_left_candidate_t = std::tuple<image_id, rotate_image_index, img_x_t, img_y_t>;
+    std::vector<top_left_candidate_t> candidated_for_top_left;
+
+    // Final image is a square, find how many tiles are on each side.
+    int side_size = sqrt(images.size());
+
+    // This is a side size of tile.
+    int img_side_size = images.begin()->second.rotated_flipped_images[0].size();
+
+    // Find candidates for starting top/left tile. Code is similar as in solve1(). This could be found by edge analyzis.
+    for (auto& [id, im] : images) {
+
+        // Use edge classification map to count number of nearby images for each rotation.
+        using nearby_image_count_for_rotation = int;
+        std::unordered_map<rotate_image_index, nearby_image_count_for_rotation> im_index_count;
+        for (const auto& rotated_img : im.nearby_imgs) {
+            im_index_count[rotated_img.rot_index]++;
+        }
+
+        // Now find max count of nearby images for each rotation
+        int max_nearbys_for_rotation = 0;
+        for (auto& [rot_index, count] : im_index_count) {
+            max_nearbys_for_rotation = std::max(max_nearbys_for_rotation, count);
+        }
+        if (max_nearbys_for_rotation == 2) {
+            for (auto&[rot_index, count] : im_index_count) {
+                if (count == 2) {
+                    const int final_image_pos_x = 0;
+                    const int final_image_pos_y = 0;
+                    candidated_for_top_left.push_back(std::make_tuple(id, rot_index, final_image_pos_x, final_image_pos_y));
+                }
+            }
+        }
+    }
+
+    const bool add_extra_info = true;
+
+    // Final assembled image.
+    img_data entire_image;
+    entire_image.resize(side_size * (img_side_size + (add_extra_info ? 2 : 0)));
+    for (auto& row : entire_image) {
+        row.resize((img_side_size + (add_extra_info ? 2 : 0)) * side_size);
+        std::fill(row.begin(), row.end(), ' ');
+    }
+
+    // Matrix with image IDs of final assembled image.
+    std::vector<std::vector<image_id>> image_matrix;
+    image_matrix.resize(side_size);
+    for (auto& row : image_matrix) {
+        row.resize(side_size);
+        std::fill(row.begin(), row.end(), -1);
+    }
+
+    // Queue will store new images added while traversing whole image.
+    std::queue<std::tuple<image_id, rotate_image_index , int, int>> img_queue;
+    bool found = false;
+
+    // Start iterating each top/left candidate.
+    for (auto& [top_left_img_id, top_left_rot_index, img_pos_x, img_pos_y] : candidated_for_top_left) {
+        img_queue.push(std::make_tuple(top_left_img_id, top_left_rot_index, img_pos_x, img_pos_y));
+
+        // When trying new top/left image, we must reset whole image.
+        for (auto& row : entire_image)
+            std::fill(row.begin(), row.end(), ' ');
+        for (auto& row : image_matrix)
+            std::fill(row.begin(), row.end(), -1);
+
+        bool first_run = true;
+        while(!img_queue.empty()) {
+            auto [img_id, rot_index, img_row, img_col] = img_queue.front();
+            img_queue.pop();
+
+            image &img = images[img_id];
+
+            if (first_run) {
+                img_data &img_data_1 = img.rotated_flipped_images[rot_index];
+
+                if (add_extra_info) {
+                    std::string title = std::to_string(img_id) + ":" + std::to_string(rot_index);
+                    std::copy(title.begin(), title.end(),
+                              entire_image[img_row * (img_side_size + 1)].begin() + 1 +
+                              img_col * (img_side_size));
+                }
+                for (std::size_t i = (add_extra_info ? 0 : 1); i < img_data_1.size() - (add_extra_info ? 0 : 1); ++i) {
+                    auto &row = img_data_1[i];
+                    std::copy(row.begin() + (add_extra_info ? 0 : 1), row.end() - (add_extra_info ? 0 : 1),
+                              entire_image[img_row * (img_side_size + (add_extra_info ? 1 : -2)) + i + (add_extra_info ? 1 : 0)].begin() + 1 +
+                                      img_col * (img_side_size + (add_extra_info ? 1 : -2)));
+                }
+                image_matrix[img_row][img_col] = img_id;
+                first_run = false;
+            }
+
+            for (auto& near_img : img.nearby_imgs) {
+                for (int edge_img_index = 0; edge_img_index < img.images_edges[rot_index].size(); ++edge_img_index) {
+                    auto edge_img_border = img.images_edges[rot_index][edge_img_index];
+                    if (edge_img_index == 0)
+                        edge_img_border += "_t";
+                    else if (edge_img_index == 1)
+                        edge_img_border += "_r";
+                    else if (edge_img_index == 2)
+                        edge_img_border += "_b";
+                    else if (edge_img_index == 3)
+                        edge_img_border += "_l";
+                    else
+                        throw "WTF!";
+                    if (near_img.eg == edge_img_border) {
+                        int near_img_row = img_row;
+                        int near_img_col = img_col;
+                        if (edge_img_border.ends_with("_r"))
+                            near_img_col++;
+                        if (edge_img_border.ends_with("_l"))
+                            near_img_col--;
+                        if (edge_img_border.ends_with("_t"))
+                            near_img_row--;
+                        if (edge_img_border.ends_with("_b"))
+                            near_img_row++;
+
+                        if (near_img_col < 0 || near_img_col >= side_size)
+                            continue;
+                        if (near_img_row < 0 || near_img_row >= side_size)
+                            continue;
+
+                        if (image_matrix[near_img_row][near_img_col] != -1)
+                            continue;
+
+                        bool repeated = false;
+                        for (int ik1 = 0; ik1 < image_matrix.size(); ik1++) {
+                            for (int ik2 = 0; ik2 < image_matrix[ik1].size(); ik2++) {
+                                if (image_matrix[ik1][ik2] == near_img.id)
+                                    repeated = true;
+                            }
+                        }
+                        if (repeated) {
+                            continue;
+                        }
+
+                        img_queue.push({near_img.id, near_img.rot_index, near_img_row, near_img_col});
+
+                        image &img = images[near_img.id];
+                        img_data &img_data_2 = img.rotated_flipped_images[near_img.rot_index];
+                        if (add_extra_info) {
+                            std::string title = std::to_string(near_img.id) + ":" + std::to_string(near_img.rot_index);
+                            std::copy(title.begin(), title.end(),
+                                      entire_image[near_img_row * (img_side_size + 1)].begin() +
+                                      near_img_col * (img_side_size + 1));
+                        }
+                        for (std::size_t i = 0; i < img_data_2.size(); ++i) {
+                            auto &row = img_data_2[i];
+
+                            std::copy(row.begin() + (add_extra_info ? 0 : 1), row.end() - (add_extra_info ? 0 : 1),
+                                      entire_image[near_img_row * (img_side_size + (add_extra_info ? 1 : -2)) + i + (add_extra_info ? 1 : 0)].begin() + 1 +
+                                              near_img_col * (img_side_size + (add_extra_info ? 1 : -2)));
+                        }
+                        image_matrix[near_img_row][near_img_col] = img_id;
+                    }
+                }
+            }
+        }
+
+        int total_used_images = 0;
+        for (int ik1 = 0; ik1 < image_matrix.size(); ik1++) {
+            for (int ik2 = 0; ik2 < image_matrix[ik1].size(); ik2++) {
+                if (image_matrix[ik1][ik2] != -1)
+                    total_used_images++;
+            }
+        }
+        if (total_used_images == side_size * side_size) {
+            found = true;
+            break;
+        }
+    }
+
+    const char* monster_pattern[] = {
+            "                  # ",
+            "#    ##    ##    ###",
+            " #  #  #  #  #  #   "
+    };
+
+
+    print_image(-1, entire_image);
+    std::cout << "image is successfully assembled: " << found << std::endl;
+
+    // Correct answer: 17032646100079
+    std::cout << "Solution 2: " << 0 << std::endl;
+}
+
 
 void task20::flip_horizontal(std::vector<row>& data)  // flips left-right
 {
@@ -254,177 +450,4 @@ void task20::rotateMatrix(std::vector<row>& image)
             image[image_size - 1 - y][x] = temp;
         }
     }
-}
-
-void task20::solve2() {
-    using img_x = int;
-    using img_y = int;
-    std::vector<std::tuple<image_id, rotate_image_index, img_x , img_y>> candidated_for_top_left;
-
-    int side_size = sqrt(images.size());
-    int img_side_size = images.begin()->second.rotated_flipped_images[0].size();
-
-    for (auto& [id, im] : images) {
-
-        // Use map to count for each
-        using nearby_image_count_for_rotation = int;
-        std::unordered_map<rotate_image_index, nearby_image_count_for_rotation> im_index_count;
-        for (const auto& rotated_img : im.nearby_imgs) {
-            im_index_count[rotated_img.rot_index]++;
-        }
-
-        // Now find max count of nearby images for each rotation
-        int max_nearbys_for_rotation = 0;
-        int max_nearby_rot_index = 0;
-        for (auto& [rot_index, count] : im_index_count) {
-            max_nearbys_for_rotation = std::max(max_nearbys_for_rotation, count);
-        }
-        if (max_nearbys_for_rotation == 2) {
-            for (auto&[rot_index, count] : im_index_count) {
-                if (count == 2) {
-                    const int final_image_pos_x = 0;
-                    const int final_image_pos_y = 0;
-                    candidated_for_top_left.push_back(std::make_tuple(id, rot_index, final_image_pos_x, final_image_pos_y));
-                }
-            }
-        }
-    }
-
-    img_data entire_image, entire_image_max;
-    entire_image.resize(side_size * (img_side_size+2));
-    for (auto& row : entire_image) {
-        row.resize((img_side_size+2) * side_size);
-        std::fill(row.begin(), row.end(), ' ');
-    }
-
-    std::vector<std::vector<image_id>> image_matrix, image_matrix_max;
-    image_matrix.resize(side_size);
-    for (auto& row : image_matrix) {
-        row.resize(side_size);
-        std::fill(row.begin(), row.end(), -1);
-    }
-
-    std::queue<std::tuple<image_id, rotate_image_index , int, int>> img_queue;
-    bool found = true;
-    int max_correct = 0;
-
-    for (auto& [top_left_img_id, top_left_rot_index, img_pos_x, img_pos_y] : candidated_for_top_left) {
-        img_queue.push(std::make_tuple(top_left_img_id, top_left_rot_index, img_pos_x, img_pos_y));
-
-        for (auto& row : entire_image)
-            std::fill(row.begin(), row.end(), ' ');
-        for (auto& row : image_matrix)
-            std::fill(row.begin(), row.end(), -1);
-
-        bool first_run = true;
-        while(!img_queue.empty()) {
-            auto [img_id, rot_index, img_row, img_col] = img_queue.front();
-            img_queue.pop();
-
-            image &img = images[img_id];
-
-            if (first_run) {
-                img_data &img_data_1 = img.rotated_flipped_images[rot_index];
-                std::string title = std::to_string(img_id) + ":" + std::to_string(rot_index);
-                std::copy(title.begin(), title.end(),
-                          entire_image[img_row * (img_side_size + 1)].begin() + 1 +
-                                  img_col * (img_side_size));
-                for (std::size_t i = 0; i < img_data_1.size(); ++i) {
-                    auto &row = img_data_1[i];
-                    std::copy(row.begin(), row.end(),
-                              entire_image[img_row * (img_side_size + 1) + i + 1].begin() + 1 +
-                                      img_col * (img_side_size + 1));
-                }
-                image_matrix[img_row][img_col] = img_id;
-                first_run = false;
-            }
-
-            for (auto& near_img : img.nearby_imgs) {
-                for (int edge_img_index = 0; edge_img_index < img.images_edges[rot_index].size(); ++edge_img_index) {
-                    auto edge_img_border = img.images_edges[rot_index][edge_img_index];
-                    if (edge_img_index == 0)
-                        edge_img_border += "_t";
-                    else if (edge_img_index == 1)
-                        edge_img_border += "_r";
-                    else if (edge_img_index == 2)
-                        edge_img_border += "_b";
-                    else if (edge_img_index == 3)
-                        edge_img_border += "_l";
-                    else
-                        throw "WTF!";
-                    if (near_img.eg == edge_img_border) {
-                        int near_img_row = img_row;
-                        int near_img_col = img_col;
-                        if (edge_img_border.ends_with("_r"))
-                            near_img_col++;
-                        if (edge_img_border.ends_with("_l"))
-                            near_img_col--;
-                        if (edge_img_border.ends_with("_t"))
-                            near_img_row--;
-                        if (edge_img_border.ends_with("_b"))
-                            near_img_row++;
-
-                        if (near_img_col < 0 || near_img_col >= side_size)
-                            continue;
-                        if (near_img_row < 0 || near_img_row >= side_size)
-                            continue;
-
-                        if (image_matrix[near_img_row][near_img_col] != -1)
-                            continue;
-
-                        bool repeated = false;
-                        for (int ik1 = 0; ik1 < image_matrix.size(); ik1++) {
-                            for (int ik2 = 0; ik2 < image_matrix[ik1].size(); ik2++) {
-                                if (image_matrix[ik1][ik2] == near_img.id)
-                                    repeated = true;
-                            }
-                        }
-                        if (repeated) {
-                            continue;
-                        }
-
-                        img_queue.push({near_img.id, near_img.rot_index, near_img_row, near_img_col});
-
-                        image &img = images[near_img.id];
-                        img_data &img_data_2 = img.rotated_flipped_images[near_img.rot_index];
-                        std::string title = std::to_string(near_img.id) + ":" + std::to_string(near_img.rot_index);
-                        std::copy(title.begin(), title.end(),
-                                  entire_image[near_img_row * (img_side_size + 1)].begin() +
-                                                              near_img_col * (img_side_size + 1));
-                        for (std::size_t i = 0; i < img_data_2.size(); ++i) {
-                            auto &row = img_data_2[i];
-                            std::copy(row.begin(), row.end(),
-                                      entire_image[near_img_row * (img_side_size + 1) + i + 1].begin() + 1 +
-                                      near_img_col * (img_side_size + 1));
-                        }
-                        image_matrix[near_img_row][near_img_col] = img_id;
-                    }
-                }
-            }
-        }
-
-        found = true;
-        int max_c = 0;
-        for (int ik1 = 0; ik1 < image_matrix.size(); ik1++) {
-            for (int ik2 = 0; ik2 < image_matrix[ik1].size(); ik2++) {
-                if (image_matrix[ik1][ik2] ==-1)
-                    found = false;
-                else
-                    max_c++;
-            }
-        }
-        if (max_c >= max_correct)
-            entire_image_max = entire_image;
-        max_correct = std::max(max_correct, max_c);
-        if (found) {
-            break;
-        }
-
-    }
-
-    print_image(-1, entire_image_max);
-    std::cout << "max correct is: " << max_correct << " of total: " << side_size*side_size << std::endl;
-
-    // Correct answer: 17032646100079
-    std::cout << "Solution 2: " << 0 << std::endl;
 }

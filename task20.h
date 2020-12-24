@@ -15,8 +15,6 @@
 using image_id = int;
 using rotate_image_index = int;
 using rotate_image_is_org = bool;
-using rotate_image_side_n = int;
-using flipped_image_index = int;
 using edge = std::string;
 using row = std::string;
 using img_data = std::vector<row>;
@@ -52,14 +50,13 @@ void print_image(int id, const img_data& data);
 class task20 {
 
     struct image {
-        std::string title;
         image_id id;
         std::vector<img_data> rotated_flipped_images; // rotated, flipped
         std::vector<std::vector<edge>> images_edges; // images_edges[k] are edges for rotated_flipped_images[k]
         std::set<nearby_img_t> nearby_imgs;
     };
     std::unordered_map<int, image> images;
-    std::unordered_map<edge, std::unordered_set<std::tuple<image_id, rotate_image_index, rotate_image_is_org, rotate_image_side_n, flipped_image_index>>> classified_imgs_map;
+    std::unordered_map<edge, std::unordered_set<std::tuple<image_id, rotate_image_index, rotate_image_is_org>>> classified_imgs_map;
 
     void flip_horizontal(img_data& data);
     img_data flip_horizontal_ex(const img_data& data) {
