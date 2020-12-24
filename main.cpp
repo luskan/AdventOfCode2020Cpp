@@ -18,6 +18,7 @@
 #include "task17.h"
 #include "task18.h"
 #include "task19.h"
+#include "task20.h"
 
 int main() {
     //Task1 task1;
@@ -79,7 +80,11 @@ int main() {
     //task18.solve1();
     //task18.solve2();
 
-    task19 task19;
-    task19.solve1();
-    task19.solve2();
+    //task19 task19;
+    //task19.solve1();
+    //task19.solve2();
+
+    task20 task20;
+    task20.solve1();
+    task20.solve2();
 }
