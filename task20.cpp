@@ -243,22 +243,12 @@ void task20::solve2() {
         }
     }
 
-    const bool add_extra_info = true;
-
-    // Final assembled image.
-    img_data entire_image;
-    entire_image.resize(side_size * (img_side_size + (add_extra_info ? 2 : 0)));
-    for (auto& row : entire_image) {
-        row.resize((img_side_size + (add_extra_info ? 2 : 0)) * side_size);
-        std::fill(row.begin(), row.end(), ' ');
-    }
-
     // Matrix with image IDs of final assembled image.
-    std::vector<std::vector<image_id>> image_matrix;
+    std::vector<std::vector<std::tuple<image_id, rotate_image_index>>> image_matrix;
     image_matrix.resize(side_size);
     for (auto& row : image_matrix) {
         row.resize(side_size);
-        std::fill(row.begin(), row.end(), -1);
+        std::fill(row.begin(), row.end(), std::make_tuple(-1, -1));
     }
 
     // Queue will store new images added while traversing whole image.
@@ -270,10 +260,8 @@ void task20::solve2() {
         img_queue.push(std::make_tuple(top_left_img_id, top_left_rot_index, img_pos_x, img_pos_y));
 
         // When trying new top/left image, we must reset whole image.
-        for (auto& row : entire_image)
-            std::fill(row.begin(), row.end(), ' ');
         for (auto& row : image_matrix)
-            std::fill(row.begin(), row.end(), -1);
+            std::fill(row.begin(), row.end(), std::make_tuple(-1,-1));
 
         bool first_run = true;
         while(!img_queue.empty()) {
@@ -284,20 +272,7 @@ void task20::solve2() {
 
             if (first_run) {
                 img_data &img_data_1 = img.rotated_flipped_images[rot_index];
-
-                if (add_extra_info) {
-                    std::string title = std::to_string(img_id) + ":" + std::to_string(rot_index);
-                    std::copy(title.begin(), title.end(),
-                              entire_image[img_row * (img_side_size + 1)].begin() + 1 +
-                              img_col * (img_side_size));
-                }
-                for (std::size_t i = (add_extra_info ? 0 : 1); i < img_data_1.size() - (add_extra_info ? 0 : 1); ++i) {
-                    auto &row = img_data_1[i];
-                    std::copy(row.begin() + (add_extra_info ? 0 : 1), row.end() - (add_extra_info ? 0 : 1),
-                              entire_image[img_row * (img_side_size + (add_extra_info ? 1 : -2)) + i + (add_extra_info ? 1 : 0)].begin() + 1 +
-                                      img_col * (img_side_size + (add_extra_info ? 1 : -2)));
-                }
-                image_matrix[img_row][img_col] = img_id;
+                image_matrix[img_row][img_col] = std::make_tuple(img_id, rot_index);
                 first_run = false;
             }
 
@@ -331,13 +306,13 @@ void task20::solve2() {
                         if (near_img_row < 0 || near_img_row >= side_size)
                             continue;
 
-                        if (image_matrix[near_img_row][near_img_col] != -1)
+                        if (std::get<0>(image_matrix[near_img_row][near_img_col]) != -1)
                             continue;
 
                         bool repeated = false;
                         for (int ik1 = 0; ik1 < image_matrix.size(); ik1++) {
                             for (int ik2 = 0; ik2 < image_matrix[ik1].size(); ik2++) {
-                                if (image_matrix[ik1][ik2] == near_img.id)
+                                if (std::get<0>(image_matrix[ik1][ik2]) == near_img.id)
                                     repeated = true;
                             }
                         }
@@ -349,20 +324,7 @@ void task20::solve2() {
 
                         image &img = images[near_img.id];
                         img_data &img_data_2 = img.rotated_flipped_images[near_img.rot_index];
-                        if (add_extra_info) {
-                            std::string title = std::to_string(near_img.id) + ":" + std::to_string(near_img.rot_index);
-                            std::copy(title.begin(), title.end(),
-                                      entire_image[near_img_row * (img_side_size + 1)].begin() +
-                                      near_img_col * (img_side_size + 1));
-                        }
-                        for (std::size_t i = 0; i < img_data_2.size(); ++i) {
-                            auto &row = img_data_2[i];
-
-                            std::copy(row.begin() + (add_extra_info ? 0 : 1), row.end() - (add_extra_info ? 0 : 1),
-                                      entire_image[near_img_row * (img_side_size + (add_extra_info ? 1 : -2)) + i + (add_extra_info ? 1 : 0)].begin() + 1 +
-                                              near_img_col * (img_side_size + (add_extra_info ? 1 : -2)));
-                        }
-                        image_matrix[near_img_row][near_img_col] = img_id;
+                        image_matrix[near_img_row][near_img_col] = std::make_tuple(near_img.id, near_img.rot_index);
                     }
                 }
             }
@@ -371,7 +333,7 @@ void task20::solve2() {
         int total_used_images = 0;
         for (int ik1 = 0; ik1 < image_matrix.size(); ik1++) {
             for (int ik2 = 0; ik2 < image_matrix[ik1].size(); ik2++) {
-                if (image_matrix[ik1][ik2] != -1)
+                if (std::get<0>(image_matrix[ik1][ik2]) != -1)
                     total_used_images++;
             }
         }
@@ -381,18 +343,135 @@ void task20::solve2() {
         }
     }
 
+    //
+    // Final assembled image.
+
+    const bool add_extra_info = false; // true - enables additional info in final image
+                                       // false - forms final image with no border on tiles
+
+    img_data entire_image;
+    entire_image.resize(side_size * (img_side_size + (add_extra_info ? 2 : -2)));
+    for (auto& row : entire_image) {
+        row.resize((img_side_size + (add_extra_info ? 2 : -2)) * side_size);
+        std::fill(row.begin(), row.end(), ' ');
+    }
+
+    // Some messy code (bcos it allows for some debug visualizations) to copy images to form big one.
+    for (size_t img_row = 0; img_row < image_matrix.size(); img_row++) {
+        for (size_t img_col = 0; img_col < image_matrix[img_row].size(); img_col++) {
+            image_id id = std::get<0>(image_matrix[img_row][img_col]);
+            rotate_image_index rot_index = std::get<1>(image_matrix[img_row][img_col]);
+
+            if (add_extra_info) {
+                std::string title = std::to_string(id) + ":" + std::to_string(rot_index);
+                std::copy(title.begin(), title.end(),
+                          entire_image[img_row * (img_side_size + 1)].begin() + 1 +
+                          img_col * (img_side_size + 1));
+            }
+            img_data& image_data = images[id].rotated_flipped_images[rot_index];
+            for (std::size_t i = (add_extra_info ? 0 : 1); i < image_data.size() - (add_extra_info ? 0 : 1); ++i) {
+                auto &row = image_data[i];
+                std::copy(row.begin() + (add_extra_info ? 0 : 1), row.end() - (add_extra_info ? 0 : 1),
+                          entire_image[img_row * (img_side_size + (add_extra_info ? 1 : -2)) + i + (add_extra_info ? 1 : -1)].begin()
+                          + (add_extra_info ? 1 : 0) +
+                          img_col * (img_side_size + (add_extra_info ? 1 : -2)));
+            }
+        }
+    }
+
+    //
+    // Now find the monster!
+
     const char* monster_pattern[] = {
             "                  # ",
             "#    ##    ##    ###",
             " #  #  #  #  #  #   "
     };
 
+    int actual_monster_pixel_count = 0;
+    int monster_image_line_len = strlen(monster_pattern[0]);
+    for (size_t m_y = 0; m_y < sizeof(monster_pattern)/sizeof(monster_pattern[0]); ++m_y) {
+        const char *sz_line = monster_pattern[m_y];
+        for (size_t m_x = 0; m_x < monster_image_line_len; ++m_x) {
+            if (monster_pattern[m_y][m_x] == '#')
+                actual_monster_pixel_count++;
+        }
+    }
 
-    print_image(-1, entire_image);
-    std::cout << "image is successfully assembled: " << found << std::endl;
+    // Make rotated/flipped images
+    std::vector<img_data> entire_image_rots;
+    for (int ik = 0; ik < 4; ++ik) {
+        entire_image_rots.push_back(rotateImage(entire_image, ik));
+        entire_image_rots.push_back(rotateImageAndFlip(entire_image, ik, false));
+        entire_image_rots.push_back(rotateImageAndFlip(entire_image, ik, true));
+    }
+    // Remove duplicates
+    std::sort( entire_image_rots.begin(), entire_image_rots.end() );
+    entire_image_rots.erase(
+            std::unique( entire_image_rots.begin(), entire_image_rots.end() ), entire_image_rots.end() );
 
-    // Correct answer: 17032646100079
-    std::cout << "Solution 2: " << 0 << std::endl;
+    int total_sea_roughness = 0;
+    int total_monsters_found = 0;
+
+    for (int rot = 0; rot < entire_image_rots.size(); ++rot) {
+        img_data &entire_image = entire_image_rots[rot];
+        total_monsters_found = 0;
+        std::unordered_set<std::tuple<int,int>> sea_monster_pixels;
+
+        for (size_t im_y = 0; im_y < entire_image.size(); ++im_y) {
+            for (size_t im_x = 0; im_x < entire_image[im_y].size(); ++im_x) {
+
+                bool abort = false;
+                int monster_pixel_count = 0;
+                std::unordered_set<std::tuple<int,int>> this_part_sea_monster_pixels;
+                for (size_t m_y = 0; m_y < sizeof(monster_pattern) / sizeof(monster_pattern[0]) && !abort; ++m_y) {
+                    for (size_t m_x = 0; m_x < monster_image_line_len && !abort; ++m_x) {
+
+                        char monster_c = monster_pattern[m_y][m_x];
+                        size_t img_m_y = im_y + m_y;
+                        size_t img_m_x = im_x + m_x;
+
+                        if (img_m_y >= entire_image.size()
+                            || img_m_x >= entire_image[im_y].size()) {
+                            abort = true;
+                            break;
+                        }
+                        char image_c = entire_image[img_m_y][img_m_x];
+
+                        if (image_c == monster_c) {
+                            monster_pixel_count++;
+                            this_part_sea_monster_pixels.insert(std::make_tuple(img_m_x, img_m_y));
+                        }
+                    }
+                }
+                if (!abort && monster_pixel_count == actual_monster_pixel_count) {
+                    sea_monster_pixels.merge(this_part_sea_monster_pixels);
+                    total_monsters_found++;
+                }
+
+            }
+        }
+
+        total_sea_roughness = 0;
+        for (size_t im_y = 0; im_y < entire_image.size(); ++im_y) {
+            for (size_t im_x = 0; im_x < entire_image[im_y].size(); ++im_x) {
+                if (entire_image[im_y][im_x] == '#') {
+                    if (!sea_monster_pixels.contains(std::make_tuple(im_x, im_y))) {
+                        total_sea_roughness++;
+                    }
+                }
+            }
+        }
+
+        if (total_monsters_found != 0) {
+            std::cout << "Solution 2:" << std::endl;
+            std::cout << " " <<rot << std::endl;
+            std::cout << "  total_monsters_found: " << total_monsters_found << std::endl;
+            std::cout << "  sea_roughness: " << total_sea_roughness << std::endl;
+        }
+    }
+
+    //print_image(-1, entire_image);
 }
 
 
