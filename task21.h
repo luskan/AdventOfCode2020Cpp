@@ -21,7 +21,7 @@ class task21 {
     using ingridient_vec_t = std::vector<ingridient_name_t>;
     using alergen_vec_t = std::vector<alergen_name>;
     std::vector<std::tuple<ingridient_vec_t, alergen_vec_t>> input_as_vec;
-
+    std::set<ingridient_name_t> ing_with_alergens_set;
     std::unordered_map<alergen_name, ingridients> alergens_to_ingridients;
     std::unordered_map<ingridient_name_t, alergens> ingridients_to_alergens;
     std::unordered_map<ingridient_name_t, std::vector<int>> ingridients_to_product_list_number;
