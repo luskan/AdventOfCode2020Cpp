@@ -465,7 +465,7 @@ void task20::solve2() {
 
         if (total_monsters_found != 0) {
             std::cout << "Solution 2:" << std::endl;
-            std::cout << " " <<rot << std::endl;
+            std::cout << " " << rot << std::endl;
             std::cout << "  total_monsters_found: " << total_monsters_found << std::endl;
             std::cout << "  sea_roughness: " << total_sea_roughness << std::endl;
         }
