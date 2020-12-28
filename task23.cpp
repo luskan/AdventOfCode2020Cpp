@@ -58,7 +58,8 @@ uint64_t task23::solve(bool task_2) {
 
     // Algorithm uses bruteforce - it does all required iterations, only ring collection uses
     // optimizations like caching and linked list to eliminate any bottlenecks. In the end, the
-    // execution time of the second task (in release) takes around 15s.
+    // execution time of the second task (in release) takes around 15s on i7. Further optimizations are in ring collection
+    // in insert and erase (use range erase??).
 
     // Show percent progress to see that something is being done in debug.
     constexpr bool show_progress = false;
