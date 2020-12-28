@@ -35,56 +35,74 @@ void testRingQueue() {
     assert(*inserted_it == 99);
 }
 
-void task23::solve1() {
+uint64_t task23::solve(bool task_2) {
 
-    RingQueue<int> ring;
-    //std::string data = "389125467"; //
-    std::string data = "215694783";
+    RingQueue<uint64_t> ring;
+    //std::string data = "389125467"; // input as in test data
+    std::string data = "215694783"; // m
+
     for (auto c : data)
         ring.push_back(c - '0');
 
-    std::vector<int> cups3;
+    std::vector<uint64_t> cups3;
+
     auto current_cup = ring.begin();
     int max_element = ring.max_element();
     int min_element = ring.min_element();
 
     if (task_2) {
-        for (int i = max_element + 1; i <= 1000000; ++i)
+        for (uint64_t i = max_element + 1; i <= 1000000; ++i)
             ring.push_back(i);
+        max_element = ring.max_element();
     }
 
-    //std::cout << "#" << 0 << " - " << ring.dump() << std::endl;
+    // Algorithm uses bruteforce - it does all required iterations, only ring collection uses
+    // optimizations like caching and linked list to eliminate any bottlenecks. In the end, the
+    // execution time of the second task (in release) takes around 15s.
 
+    // Show percent progress to see that something is being done in debug.
+    constexpr bool show_progress = false;
     int last_percent = -1;
-    for (int iter = 0; iter < (task_2 ? 10 * 1000000 : 100); ++iter) {
 
-        int percent = ((float)iter/(task_2 ? 10 * 1000000 : 100))*100;
-        if (percent != last_percent) {
-            std::cout << percent << std::endl;
-            last_percent = percent;
+    uint64_t max_iters = (task_2 ? 10 * 1000000 : 100);
+
+    for (uint64_t iter = 0; iter < max_iters; ++iter) {
+
+        if (show_progress) {
+            int percent = ((double) iter / max_iters) * 100;
+            if (percent != last_percent) {
+                std::cout << percent << std::endl;
+                last_percent = percent;
+
+                // Sanity check
+                //ring.verifyCache();
+            }
         }
 
+        // Take three next cups
         cups3.clear();
         for (int n = 0; n < 3; ++n)
             cups3.push_back(*(current_cup + 1 + n));
 
-        int current_cup_label = *current_cup;
+        // Remove those cups
         auto rm_cups = current_cup + 1;
         for (int n = 0; n < 3; ++n)
             rm_cups = ring.erase(rm_cups);
 
-        //std::cout << "#     " << (iter + 1) << " - " << ring.dump() << std::endl;
-
-        current_cup = ring.find(current_cup_label);
-
-        int destination_label = current_cup_label - 1;
-        if (destination_label < min_element)
+        // Apply task rules when choosing destination cup
+        auto destination_label = *current_cup;
+        if (destination_label == min_element)
             destination_label = max_element;
+        else
+            destination_label--;
+
+        // Make sure destination is of correct value.
         while(true) {
             if (std::find(cups3.begin(), cups3.end(), destination_label) != cups3.end()) {
-                destination_label--;
-                if (destination_label < min_element)
+                if (destination_label == min_element)
                     destination_label = max_element;
+                else
+                    destination_label--;
             }
             else
                 break;
@@ -94,11 +112,9 @@ void task23::solve1() {
         for (int n = 0; n < 3; ++n)
             dest_it = ring.insert(dest_it, cups3[n]);
 
-        current_cup = ring.find(current_cup_label);
         current_cup = current_cup + 1;
     }
 
-    //std::cout << "#" << (iter + 1) << " - " << ring.dump() << std::endl;
     auto one_it = ring.find(1);
     one_it++;
     std::string final;
@@ -106,20 +122,26 @@ void task23::solve1() {
     if (task_2) {
         uint64_t mul = (*one_it);
         one_it++;
-        mul *= *one_it;
-        final = std::to_string(mul);
-        std::cout << "Solution2: " << final << std::endl;
+        mul *= (uint64_t)(*one_it);
+        return mul;
     }
     else {
         while (*one_it != 1) {
             final += std::to_string(*one_it);
             one_it++;
         }
-        std::cout << "Solution1: " << final << std::endl;
+        return std::stoull(final);
     }
 }
 
+void task23::solve1() {
+    auto result = solve(false);
+    // Correct: 46978532  (for task case it is 67384529)
+    std::cout << "Solution1 : " << result << std::endl;
+}
+
 void task23::solve2() {
-    task_2 = true;
-    solve1();
+    auto result = solve(true);
+    // Correct: 163035127721 (for task case it is 149245887792)
+    std::cout << "Solution2 : " << result << std::endl;
 }
