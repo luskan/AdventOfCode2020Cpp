@@ -8,6 +8,7 @@
 #include <set>
 #include <unordered_map>
 #include <string>
+#include <vector>
 #include "utils.h"
 
 class task21 {

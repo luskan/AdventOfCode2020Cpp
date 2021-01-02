@@ -144,5 +144,6 @@ void task23::solve1() {
 void task23::solve2() {
     auto result = solve(true);
     // Correct: 163035127721 (for task case it is 149245887792)
+    // INFO: algorithm is not super optimal, might take 15 up to 30s depending on cpu
     std::cout << "Solution2 : " << result << std::endl;
 }

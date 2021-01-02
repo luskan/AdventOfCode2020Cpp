@@ -18,12 +18,12 @@ template<typename T, typename Coll = std::list<T>>
 class RingQueue {
     Coll vec;
 public:
-    template<typename Coll>
+    template<typename ItColl>
     struct iterator {
-        typename Coll* vec;
-        typename Coll::iterator pos;
+        ItColl* vec;
+        typename ItColl::iterator pos;
         iterator() : vec(nullptr) {}
-        iterator(Coll& vec, typename Coll::iterator pos) : vec(&vec), pos(pos) {
+        iterator(Coll& vec, typename ItColl::iterator pos) : vec(&vec), pos(pos) {
         }
         iterator(const iterator&) = default;
         bool operator==(const iterator& it) {
@@ -37,8 +37,8 @@ public:
             if (pos == vec->end())
                 pos = vec->begin();
         }
-        iterator<Coll> operator+(int i) {
-            typename Coll::iterator new_pos = pos;
+        iterator<ItColl> operator+(int i) {
+            typename ItColl::iterator new_pos = pos;
 
             for (int k = 0; k < i; ++k) {
                 if (new_pos == vec->end())
@@ -51,6 +51,8 @@ public:
             return iterator(*vec, new_pos);
         }
     };
+
+    template<typename C> iterator(C, typename C::iterator) -> iterator<C>;
 
     std::unordered_map<T, iterator<Coll>> cache;
 

@@ -75,7 +75,7 @@ void task21::solve1() {
         for (auto& [ing_name, count] : ing_counts) {
             ingridient_all_counts.push_back(std::make_tuple(alerg_name, ing_name, (double) count / (double)total_sum));
             auto it = std::find_if(ingridient_counts.begin(), ingridient_counts.end(),
-                                   [&](auto &item)
+                                   [&,ing_name=ing_name](auto &item)
                                    {
                                         auto& [ing,prob_old] = item;
                                         return ing == ing_name;

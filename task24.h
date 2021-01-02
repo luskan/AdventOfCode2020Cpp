@@ -7,7 +7,12 @@
 
 #include <vector>
 #include <array>
+#include <unordered_map>
+#include <set>
+#include <string_view>
 #include "utils.h"
+
+using namespace std::literals;
 
 class task24 {
     struct hex_pos {
@@ -66,29 +71,38 @@ class task24 {
     };
     struct Tile {
         TileColor color = TileColor::white;
+        hex_pos position;
 
-        Tile() {}
-        Tile(TileColor color) : color(color) {}
+        Tile(hex_pos position) {}
+        Tile(TileColor color, hex_pos position) : color(color), position(position) {}
 
         void toggle() {
             color = (color == TileColor::white) ? TileColor::black : TileColor::white;
         }
+
+        friend bool operator<(const Tile& lop, const Tile& rop) {
+            return std::make_tuple(lop.position.x, lop.position.y, lop.color) < std::make_tuple(rop.position.x, rop.position.y, rop.color);
+        }
     };
 
-    std::array<std::tuple<Direction, std::string>, 6> mapDirToStr {{
-           {Direction::se, "se"},
-           {Direction::nw, "nw"},
-           {Direction::ne, "ne"},
-           {Direction::sw, "sw"},
-           {Direction::e, "e"},
-           {Direction::w, "w"}
+    std::array<std::tuple<Direction, std::string_view>, 6> mapDirToStr {{
+           {Direction::se, "se"sv},
+           {Direction::nw, "nw"sv},
+           {Direction::ne, "ne"sv},
+           {Direction::sw, "sw"sv},
+           {Direction::e, "e"sv},
+           {Direction::w, "w"sv}
     }};
+
+    std::multiset<task24::Tile> getNearbyTiles(std::unordered_map<hex_pos, Tile>& tiles, hex_pos hexPos);
 
     paths_t paths;
 public:
     task24();
     void solve1();
     void solve2();
+
+    std::unordered_map<hex_pos, Tile> generateTileMap();
 };
 
 namespace std

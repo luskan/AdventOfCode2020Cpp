@@ -9,6 +9,7 @@
 #include <string>
 #include <array>
 #include <unordered_map>
+#include <algorithm>
 
 task24::task24() {
     std::ifstream ifs("../data24.txt");
@@ -30,6 +31,19 @@ task24::task24() {
 }
 
 void task24::solve1() {
+    std::unordered_map<hex_pos, Tile> tiles = generateTileMap();
+
+    int count = 0;
+    for (const auto& [hp, tile] : tiles) {
+        if (tile.color == TileColor::black)
+            count++;
+    }
+
+    // correct: 473
+    std::cout << "Solution1: " << count << std::endl;
+}
+
+std::unordered_map<task24::hex_pos, task24::Tile> task24::generateTileMap() {
     std::unordered_map<hex_pos, Tile> tiles;
     for (const auto& path : paths) {
         std::string s;
@@ -40,12 +54,16 @@ void task24::solve1() {
             cur_pos.y += off.y;
         }
         if (tiles.contains(cur_pos)) {
-            auto& tile = tiles[cur_pos];
+            auto& tile = tiles.at(cur_pos);
             tile.toggle();
         }
         else {
-            tiles[cur_pos] = {TileColor::black};
+            tiles.insert({cur_pos, {TileColor::black, cur_pos}});
         }
+
+        // This operation will generate new - not in the tile map white tiles, which
+        // will be used in the solution 2.
+        [[maybe_unused]]auto tile_set = getNearbyTiles(tiles, cur_pos);
 
         int count_b = 0, count_w=0;
         for (const auto& [hp, tile] : tiles) {
@@ -54,8 +72,29 @@ void task24::solve1() {
             if (tile.color == TileColor::white)
                 count_w++;
         }
-        std::cout << "#" << n++ << ", b=" << count_b << ", w=" << count_w << ", " << cur_pos.x << ";" << cur_pos.y << " - ";
-        std::cout << s << std::endl;
+    }
+    return tiles;
+}
+
+void task24::solve2() {
+    std::unordered_map<hex_pos, Tile> tiles = generateTileMap();
+
+    for (int iter = 0; iter < 100; ++iter) {
+        for (auto& [pos, tile]: tiles) {
+            auto tileSet = getNearbyTiles(tiles, tile.position);
+            //int white = std::count_if(tileSet.begin(), tileSet.end(), [](auto& t){ return t.color == TileColor::white;});
+            int black = std::count_if(tileSet.begin(), tileSet.end(), [](auto& t){ return t.color == TileColor::black;});
+            if (tile.color == TileColor::black) {
+                if (black == 0 || black > 2) {
+                    tile.toggle();
+                }
+            }
+            else {
+                if (black == 2) {
+                    tile.toggle();
+                }
+            }
+        }
     }
 
     int count = 0;
@@ -64,9 +103,25 @@ void task24::solve1() {
             count++;
     }
 
-    std::cout << "Solution1: " << count << std::endl;
+    // correct: ?
+    std::cout << "Solution2: " << count << std::endl;
 }
 
-void task24::solve2() {
+std::multiset<task24::Tile> task24::getNearbyTiles(std::unordered_map<hex_pos, Tile> &tiles, hex_pos hexPos) {
+    std::multiset<task24::Tile> resSet;
 
+    std::array dirs = {Direction::e, Direction::se, Direction::sw,
+                       Direction::w, Direction::nw, Direction::ne};
+    for (auto dir : dirs) {
+        auto off = DirToPos(hexPos, dir);
+        hex_pos hexNewPos = hexPos;
+        hexNewPos.x += off.x;
+        hexNewPos.y += off.y;
+
+        if (!tiles.contains(hexNewPos))
+            tiles.insert({hexNewPos, {TileColor::white, hexNewPos}});
+        resSet.insert(tiles.at(hexNewPos));
+    }
+
+    return resSet;
 }
