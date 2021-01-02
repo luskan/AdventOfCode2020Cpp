@@ -22,6 +22,7 @@
 #include "task21.h"
 #include "task22.h"
 #include "task23.h"
+#include "task24.h"
 
 int main() {
     //Task1 task1;
@@ -99,7 +100,11 @@ int main() {
     //task22.solve1();
     //task22.solve2();
 
-    task23 task23;
-    task23.solve1();
-    task23.solve2();
+    //task23 task23;
+    //task23.solve1();
+    //task23.solve2();
+
+    task24 task24;
+    task24.solve1();
+    task24.solve2();
 }
