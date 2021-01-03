@@ -63,6 +63,7 @@ class task24 {
                     return {0, -1};
             }
         }
+        throw "Invalid !";
     };
     using path_t = std::vector<Direction>;
     using paths_t = std::vector<path_t>;
@@ -71,9 +72,8 @@ class task24 {
     };
     struct Tile {
         TileColor color = TileColor::white;
-        hex_pos position;
+        hex_pos position = {0, 0};
 
-        Tile(hex_pos position) {}
         Tile(TileColor color, hex_pos position) : color(color), position(position) {}
 
         void toggle() {
@@ -94,15 +94,15 @@ class task24 {
            {Direction::w, "w"sv}
     }};
 
-    std::multiset<task24::Tile> getNearbyTiles(std::unordered_map<hex_pos, Tile>& tiles, hex_pos hexPos);
+    std::multiset<task24::Tile> getNearbyTiles(const std::unordered_map<hex_pos, Tile>& tiles, hex_pos hexPos);
+
+    std::unordered_map<hex_pos, Tile> generateTileMap();
 
     paths_t paths;
 public:
     task24();
     void solve1();
     void solve2();
-
-    std::unordered_map<hex_pos, Tile> generateTileMap();
 };
 
 namespace std

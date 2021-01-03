@@ -39,7 +39,7 @@ void task24::solve1() {
             count++;
     }
 
-    // correct: 473
+    // correct: 473 (test data: 10)
     std::cout << "Solution1: " << count << std::endl;
 }
 
@@ -53,48 +53,64 @@ std::unordered_map<task24::hex_pos, task24::Tile> task24::generateTileMap() {
             cur_pos.x += off.x;
             cur_pos.y += off.y;
         }
+
         if (tiles.contains(cur_pos)) {
             auto& tile = tiles.at(cur_pos);
             tile.toggle();
+            if (tile.color == TileColor::white)
+                tiles.erase(cur_pos);
         }
         else {
             tiles.insert({cur_pos, {TileColor::black, cur_pos}});
         }
-
-        // This operation will generate new - not in the tile map white tiles, which
-        // will be used in the solution 2.
-        [[maybe_unused]]auto tile_set = getNearbyTiles(tiles, cur_pos);
-
-        int count_b = 0, count_w=0;
-        for (const auto& [hp, tile] : tiles) {
-            if (tile.color == TileColor::black)
-                count_b++;
-            if (tile.color == TileColor::white)
-                count_w++;
-        }
     }
+
     return tiles;
 }
 
 void task24::solve2() {
     std::unordered_map<hex_pos, Tile> tiles = generateTileMap();
 
-    for (int iter = 0; iter < 100; ++iter) {
-        for (auto& [pos, tile]: tiles) {
+    for (int iter = 1; iter <= 100; ++iter) {
+        std::unordered_map<hex_pos, Tile> tiles_next;
+
+        for (const auto& [pos, tile]: tiles) {
+            if (tile.color == TileColor::white)
+                continue;
+
             auto tileSet = getNearbyTiles(tiles, tile.position);
-            //int white = std::count_if(tileSet.begin(), tileSet.end(), [](auto& t){ return t.color == TileColor::white;});
-            int black = std::count_if(tileSet.begin(), tileSet.end(), [](auto& t){ return t.color == TileColor::black;});
-            if (tile.color == TileColor::black) {
-                if (black == 0 || black > 2) {
-                    tile.toggle();
+            int blacks = std::count_if(tileSet.begin(), tileSet.end(), [](auto& t){ return t.color == TileColor::black;});
+
+            Tile newTile = tile;
+
+            // Rule 1 for turning black to white
+            if (blacks == 0 || blacks > 2) {
+                newTile.color = TileColor::white;
+            }
+
+            // Rule 2 for turning white to black (if exactly two black are nearby). Becasue our tile map does not store
+            // white tiles (missing tile is considered to be white), this rule is first finding all nearby whites, and
+            // for each nearby white it searches its nearby tiles - if there are exactly two blacks then rule two is
+            // applied and new black tile is inserted.
+            for (const auto& ts : tileSet) {
+                if (ts.color == TileColor::white) {
+                    auto tileSet2 = getNearbyTiles(tiles, ts.position);
+                    int blacks2 = std::count_if(tileSet2.begin(), tileSet2.end(), [](auto& t){ return t.color == TileColor::black;});
+                    if (blacks2 == 2) {
+                        Tile new_ts{TileColor::black, ts.position};
+                        auto [it, inserted] = tiles_next.insert({ts.position, new_ts});
+                        if (!inserted)
+                            it->second = new_ts;
+                    }
                 }
             }
-            else {
-                if (black == 2) {
-                    tile.toggle();
-                }
-            }
+
+            auto [it, inserted] = tiles_next.insert({newTile.position, newTile});
+            if (!inserted)
+                it->second = newTile;
         }
+
+        tiles = std::move(tiles_next);
     }
 
     int count = 0;
@@ -103,25 +119,26 @@ void task24::solve2() {
             count++;
     }
 
-    // correct: ?
+    // correct: 4070 (test data: 2208)
     std::cout << "Solution2: " << count << std::endl;
 }
 
-std::multiset<task24::Tile> task24::getNearbyTiles(std::unordered_map<hex_pos, Tile> &tiles, hex_pos hexPos) {
+std::multiset<task24::Tile> task24::getNearbyTiles(const std::unordered_map<hex_pos, Tile> &tiles, hex_pos hexPos) {
     std::multiset<task24::Tile> resSet;
 
     std::array dirs = {Direction::e, Direction::se, Direction::sw,
                        Direction::w, Direction::nw, Direction::ne};
     for (auto dir : dirs) {
         auto off = DirToPos(hexPos, dir);
-        hex_pos hexNewPos = hexPos;
+        auto hexNewPos = hexPos;
         hexNewPos.x += off.x;
         hexNewPos.y += off.y;
 
-        if (!tiles.contains(hexNewPos))
-            tiles.insert({hexNewPos, {TileColor::white, hexNewPos}});
+        if (!tiles.contains(hexNewPos)) {
+            resSet.insert({TileColor::white, hexNewPos});
+            continue;
+        }
         resSet.insert(tiles.at(hexNewPos));
     }
-
     return resSet;
 }
