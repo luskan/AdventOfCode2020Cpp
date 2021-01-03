@@ -8,9 +8,10 @@
 #include <vector>
 
 class Task1 {
+  bool example_data;
   std::vector<int> input;
 public:
-  Task1();
+  Task1(bool example);
   void solve1();
   void solve2();
 };

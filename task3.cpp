@@ -5,9 +5,11 @@
 #include <iostream>
 #include "task3.h"
 #include <string>
+#include "utils.h"
 
-Task3::Task3() {
-  std::ifstream ifs("../data3.txt");
+Task3::Task3(bool example) {
+  example_data = example;
+  std::ifstream ifs(example_data ? "../data3_example.txt" : "../data3_task.txt");
   std::string line;
   while(std::getline(ifs, line)) {
     TerrainRow row;
@@ -21,11 +23,12 @@ Task3::Task3() {
     }
     terrain.push_back(row);
   }
-  std::cout << terrain.size();
 }
 
 void Task3::Solve1() {
-  std::cout << "Total trees: " << GetNumberOfTreesForSlope(3,1) << std::endl;
+  auto count = GetNumberOfTreesForSlope(3,1);
+  verify_result(count, example_data ? 7 : 193);
+  std::cout << " part1: total trees: " << count << std::endl;
 }
 
 void Task3::Solve2() {
@@ -34,7 +37,8 @@ void Task3::Solve2() {
   for (int n = 0; n < sizeof(slopes)/sizeof(slopes[0]); ++n) {
     mul *= GetNumberOfTreesForSlope(slopes[n][0], slopes[n][1]);
   }
-  std::cout << "Trees mul: " << mul << std::endl;
+  verify_result(mul, example_data ? 336 : 1355323200);
+  std::cout << " part2: trees: " << mul << std::endl;
 }
 
 int Task3::GetNumberOfTreesForSlope(int dx, int dy) {

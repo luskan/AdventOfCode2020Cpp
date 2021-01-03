@@ -6,9 +6,11 @@
 #include <regex>
 #include <fstream>
 #include <iostream>
+#include "utils.h"
 
-Task4::Task4() {
-  std::ifstream ifs("../data4.txt");
+Task4::Task4(bool example) {
+  example_data = example;
+  std::ifstream ifs(example_data ? "../data4_example.txt" : "../data4_task.txt");
   std::string line;
 
   std::regex regLine{ R"((\w+):([#\w\d]+))",
@@ -31,7 +33,6 @@ Task4::Task4() {
     }
   }
   allPassports.push_back(pd);
-  std::cout << allPassports.size() << std::endl;
 }
 
 
@@ -55,11 +56,16 @@ int Task4::countCorrect(bool validate) {
 }
 
 void Task4::solve1() {
-  std::cout << "Correct: " << countCorrect(false) << std::endl;
+  auto count = countCorrect(false);
+  verify_result(count, example_data ? 2 : 260);
+  std::cout << " part1: valid passports = " << count << std::endl;
 }
 
 void Task4::solve2() {
-  std::cout << "Correct: " << countCorrect(true) << std::endl;
+  auto count = countCorrect(true);
+  // In part2 example data, there was no correct answer to sample data. Only few valid/invalid passports were presentd.
+  verify_result(count, example_data ? 2 : 153);
+  std::cout << " part2: valid passports = " << count << std::endl;
 }
 
 bool Task4::isValid(std::map<std::string, std::string> &map) {

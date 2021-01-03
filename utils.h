@@ -98,4 +98,10 @@ static inline std::string trim_copy(std::string s) {
     return s;
 }
 
+template<typename  T>
+inline void verify_result(T result, T expected) {
+  if (result != expected)
+    throw "Invalid result!";
+}
+
 #endif //ADVENTOFCODE2020_UTILS_H

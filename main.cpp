@@ -25,86 +25,146 @@
 #include "task24.h"
 
 int main() {
-    //Task1 task1;
-    //task1.solve2();
+#if 1
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task1 - example data" << std::endl;
+    Task1 task1(true);
+    task1.solve1();
+    task1.solve2();
+    std::cout << "Task1 - task data" << std::endl;
+    Task1 task1b(false);
+    task1b.solve1();
+    task1b.solve2();
 
-    //Task2 task2;
-    //task2.solve2();
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task2 - example data" << std::endl;
+    Task2 task2(true);
+    task2.solve1();
+    task2.solve2();
+    std::cout << "Task2 - task data" << std::endl;
+    Task2 task2b(false);
+    task2b.solve1();
+    task2b.solve2();
 
-    //Task3 task3;
-    //task3.Solve2();
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task3 - example data" << std::endl;
+    Task3 task3(true);
+    task3.Solve1();
+    task3.Solve2();
+    std::cout << "Task3 - task data" << std::endl;
+    Task3 task3b(false);
+    task3b.Solve1();
+    task3b.Solve2();
 
-    //Task4 task4;
-    //task4.solve2();
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task4 - example data" << std::endl;
+    Task4 task4(true);
+    task4.solve1();
+    task4.solve2();
+    std::cout << "Task4 - task data" << std::endl;
+    Task4 task4b(false);
+    task4b.solve1();
+    task4b.solve2();
 
-    //Task5 task5;
-    //task5.solve2();
+  return 0;
+    std::cout << "Task5" << std::endl;
+    Task5 task5;
+    task5.solve1();
+    task5.solve2();
 
-    //Task6 task6;
-    //task6.solve2();
+    std::cout << "Task6" << std::endl;
+    Task6 task6;
+    task6.solve1();
+    task6.solve2();
 
-    //Task7 task7;
-    //task7.solve2();
+    std::cout << "Task7" << std::endl;
+    Task7 task7;
+    task7.solve1();
+    task7.solve2();
 
-    //Task8 task8;
-    //task8.solve2();
+    std::cout << "Task8" << std::endl;
+    Task8 task8;
+    task8.solve1();
+    task8.solve2();
 
-    //task9 task9;
-    //task9.solve2();
+    std::cout << "Task9" << std::endl;
+    task9 task9;
+    task9.solve1();
+    task9.solve2();
 
-    //task10 task10;
-    //task10.solve2b();
+    std::cout << "Task10" << std::endl;
+    task10 task10;
+    task10.solve1();
+    task10.solve2b();
 
-    //task11 task11;
-    //task11.solve2();
+    std::cout << "Task11" << std::endl;
+    task11 task11;
+    task11.solve1();
+    task11.solve2();
 
-    //task12 task12;
-    //task12.solve2();
+    std::cout << "Task12" << std::endl;
+    task12 task12;
+    task12.solve1();
+    task12.solve2();
 
-    //task13 task13;
-    //task13.solve2();
+    std::cout << "Task13" << std::endl;
+    task13 task13;
+    task13.solve1();
+    task13.solve2();
 
-    //task14 task14;
-    //task14.solve1();
-    //task14.solve2();
+    std::cout << "Task14" << std::endl;
+    task14 task14;
+    task14.solve1();
+    task14.solve2();
 
-    //task15 task15;
-    //task15.solve1();
-    //task15.solve2();
+    std::cout << "Task15" << std::endl;
+    task15 task15;
+    task15.solve1();
+    task15.solve2();
 
-    //task16 task16;
-    //task16.solve1();
-    //task16.solve2();
+    std::cout << "Task16" << std::endl;
+    task16 task16;
+    task16.solve1();
+    task16.solve2();
 
-    //task17 task17;
-    ////task17.solve1();
-    //task17.solve2();
+    std::cout << "Task17" << std::endl;
+    task17 task17;
+    task17.solve1();
+    task17.solve2();
 
-    //task18 task18;
-    //task18.solve1();
-    //task18.solve2();
+    std::cout << "Task18" << std::endl;
+    task18 task18;
+    task18.solve1();
+    task18.solve2();
 
-    //task19 task19;
-    //task19.solve1();
-    //task19.solve2();
+    std::cout << "Task19" << std::endl;
+    task19 task19;
+    task19.solve1();
+    task19.solve2();
 
-    //task20 task20;
-    //task20.solve1();
-    //task20.solve2();
+    std::cout << "Task20" << std::endl;
+    task20 task20;
+    task20.solve1();
+    task20.solve2();
 
-    //task21 task21;
-    //task21.solve1();
-    //task21.solve2();
+    std::cout << "Task21" << std::endl;
+    task21 task21;
+    task21.solve1();
+    task21.solve2();
 
-    //task22 task22;
-    //task22.solve1();
-    //task22.solve2();
+    std::cout << "Task22" << std::endl;
+    task22 task22;
+    task22.solve1();
+    task22.solve2();
 
-    //task23 task23;
-    //task23.solve1();
-    //task23.solve2();
+    std::cout << "Task23" << std::endl;
+    task23 task23;
+    task23.solve1();
+    task23.solve2();
 
+    std::cout << "Task24" << std::endl;
     task24 task24;
     task24.solve1();
     task24.solve2();
+#endif
 }

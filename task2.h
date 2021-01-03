@@ -17,8 +17,9 @@ struct PasswordEntry {
 
 class Task2 {
   std::vector<PasswordEntry> entries;
+  bool example_data;
 public:
-  Task2();
+  Task2(bool example);
   void solve1();
   void solve2();
 };

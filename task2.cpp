@@ -6,9 +6,11 @@
 #include <iostream>
 #include <regex>
 #include "task2.h"
+#include "utils.h"
 
-Task2::Task2() {
-  std::ifstream ifs("../data2.txt");
+Task2::Task2(bool example) {
+  example_data = example;
+  std::ifstream ifs(example_data ? "../data2_example.txt" : "../data2_task.txt");
   std::string line;
 
   // 9-12 q: qqqxhnhdmqqqqjz
@@ -29,7 +31,6 @@ Task2::Task2() {
     pe.password = m[4];
     entries.push_back(pe);
   }
-  std::cout << entries.size();
 }
 
 void Task2::solve1() {
@@ -39,7 +40,8 @@ void Task2::solve1() {
     if (count >= pe.min && count <= pe.max)
       valid++;
   }
-  std::cout << "Task2 - case1, valid passwords: " << valid << std::endl;
+  verify_result(valid, example_data ? 2 : 569);
+  std::cout << " part1: valid passwords: " << valid << std::endl;
 }
 
 void Task2::solve2() {
@@ -57,5 +59,7 @@ void Task2::solve2() {
     if (check1 + check2 == 1)
       valid++;
   }
-  std::cout << "Task2 - case2, valid passwords: " << valid << std::endl;
+
+  verify_result(valid, example_data ? 1 : 346);
+  std::cout << " part2: valid passwords: " << valid << std::endl;
 }

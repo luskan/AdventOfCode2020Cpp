@@ -15,8 +15,9 @@ using TerrainRow = std::vector<TerrainSquare>;
 
 class Task3 {
   std::vector<TerrainRow> terrain;
+  bool example_data;
 public:
-  Task3();
+  Task3(bool example);
   TerrainSquare& get(int x, int y) {
     if (y >= terrain.size())
       throw "Y is to high!";

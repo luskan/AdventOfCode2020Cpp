@@ -33,8 +33,6 @@ task17::task17() {
 
 void task17::solve1() {
 
-
-
     for (int step = 0; step < 6; ++step) {
         matrix_4d_t temp;
 

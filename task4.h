@@ -12,8 +12,9 @@
 class Task4 {
   using PassportData = std::map<std::string, std::string>;
   std::vector<PassportData> allPassports;
+  bool example_data;
 public:
-  Task4();
+  Task4(bool example);
 
   void solve1();
 
