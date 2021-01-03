@@ -8,8 +8,11 @@
 #include <set>
 #include <iostream>
 #include <algorithm>
-Task6::Task6() {
-  std::ifstream ifs("../data6.txt");
+#include "utils.h"
+
+Task6::Task6(bool example) {
+  example_data = example;
+  std::ifstream ifs(example_data ? "../data6_example.txt" : "../data6_task.txt");
   std::string line;
   GroupData gd;
   while(std::getline(ifs, line)) {
@@ -29,7 +32,9 @@ void Task6::solve1() {
     std::string uni = computeUnique(groups[n]);
     total += uni.size();
   }
-  std::cout << "Total : " << total << std::endl;
+
+  verify_result(total, example_data ? 11 : 6630);
+  std::cout << " part1: total = " << total << std::endl;
 }
 
 void Task6::solve2() {
@@ -38,7 +43,9 @@ void Task6::solve2() {
     std::string uni = computeUnique2(groups[n]);
     total += uni.size();
   }
-  std::cout << "Total : " << total << std::endl;
+
+  verify_result(total, example_data ? 6 : 3437);
+  std::cout << " part2: total = " << total << std::endl;
 }
 
 std::string Task6::computeUnique(std::vector<std::string> &v) {

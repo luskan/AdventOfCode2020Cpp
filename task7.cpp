@@ -7,9 +7,12 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include "utils.h"
 
-Task7::Task7() {
-  std::ifstream ifs("../data7.txt");
+Task7::Task7(bool example, bool part1) {
+  for_part1 = part1;
+  example_data = example;
+  std::ifstream ifs(example_data ? (for_part1 ? "../data7_example.txt" : "../data7_example_part2.txt") : "../data7_task.txt");
   std::string line;
 
   // light lavender bags contain 5 clear teal bags, 2 wavy gold bags, 5 drab maroon bags, 2 posh cyan bags.
@@ -58,7 +61,9 @@ void Task7::solve1() {
     std::set<std::string> path = findPathUp(bagColor);
     all.merge(path);
   }
-  std::cout << "total: " << all.size() << std::endl;
+
+  verify_result(all.size(), example_data ? 4u : 300u);
+  std::cout << " part1: total = " << all.size() << std::endl;
 }
 
 void Task7::solve2() {
@@ -71,7 +76,9 @@ void Task7::solve2() {
       all.merge(path);
     }
   }
-  std::cout << "total: " << all.size() << std::endl;
+
+  verify_result(all.size(), example_data ? 126u : 8030u);
+  std::cout << " part2: total = " << all.size() << std::endl;
 }
 
 std::set<std::string> Task7::findPathUp(std::string bagColor) {

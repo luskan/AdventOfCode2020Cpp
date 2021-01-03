@@ -9,17 +9,19 @@
 #include <algorithm>
 #include <numeric>
 #include <string>
+#include "utils.h"
 
-task9::task9() {
-  std::ifstream ifs("../data9.txt");
+task9::task9(bool example) {
+  example_data = example;
+  std::ifstream ifs(example_data ? "../data9_example.txt" : "../data9_task.txt");
   std::string line;
   while(std::getline(ifs, line)) {
-    entries.push_back(std::stoul(line));
+    entries.push_back(std::stoull(line));
   }
 }
 
-unsigned long task9::solve1() {
-  const int preamble = 25;
+unsigned long task9::findSolve1() {
+  const int preamble = example_data ? 5 : 25;
   std::vector<bool> used;
   used.resize(entries.size(), false);
   for (int n = preamble; n < entries.size(); ++n) {
@@ -46,15 +48,20 @@ unsigned long task9::solve1() {
         break;
     }
     if (!isOk) {
-      std::cout << "Found: " << cur << std::endl;
       return cur;
     }
   }
   return 0;
 }
 
-void task9::solve2() {
-  uint32_t val = solve1();
+void task9::solve1() {
+  auto res = findSolve1();
+  verify_result(res, example_data ? 127ul : 776203571ul);
+  std::cout << " part1: " << res << std::endl;
+}
+
+unsigned long task9::findSolve2() {
+  uint32_t val = findSolve1();
   std::vector<uint32_t> vals;
   for (int n = 0; n < entries.size(); ++n) {
     vals.clear();
@@ -68,11 +75,15 @@ void task9::solve2() {
         break;
       if (val == sum) {
         std::sort(vals.begin(), vals.end());
-        for (int p = 0; p < vals.size(); ++p)
-          std::cout << vals[p] << ", ";
-        std::cout << std::endl;
-        std::cout << vals.front() + vals.back() << std::endl;
+        return vals.front() + vals.back();
       }
     }
   }
+  return 0;
+}
+
+void task9::solve2() {
+  auto res = findSolve2();
+  verify_result(res, example_data ? 62ul : 104800569ul);
+  std::cout << " part2: " << res << std::endl;
 }

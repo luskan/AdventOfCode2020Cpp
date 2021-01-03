@@ -6,9 +6,11 @@
 #include <fstream>
 #include <regex>
 #include <iostream>
+#include "utils.h"
 
-Task8::Task8() {
-  std::ifstream ifs("../data8.txt");
+Task8::Task8(bool example) {
+  example_data = example;
+  std::ifstream ifs(example ? "../data8_example.txt" : "../data8_task.txt");
   std::string line;
   //jmp -612
   std::regex rg(R"((\w+) ([-+][0-9]+))", std::regex_constants::ECMAScript | std::regex_constants::icase);
@@ -24,6 +26,12 @@ Task8::Task8() {
 }
 
 void Task8::solve1() {
+  auto val = ComputeSolve1();
+  verify_result(val, example_data ? 5 : 1753);
+  std::cout << " part1: value: " << val << std::endl;
+}
+
+int Task8::ComputeSolve1() {
   int val = 0;
   int pc = 0;
   while(true) {
@@ -33,8 +41,7 @@ void Task8::solve1() {
       break;
     CodeLine &cl = code[pc];
     if (cl.count > 0) {
-      std::cout << "Acc value: " << val << std::endl;
-      break;
+      return val;
     }
     cl.count++;
     if (cl.instruction == "nop") {
@@ -49,9 +56,16 @@ void Task8::solve1() {
     }
     pc++;
   }
+  return 0;
 }
 
 void Task8::solve2() {
+  auto val = ComputeSolve2();
+  verify_result(val, example_data ? 8 : 733);
+  std::cout << " part2: value: " << val << std::endl;
+}
+
+int Task8::ComputeSolve2() {
   for (int n = 0; n < code.size(); n++) {
     CodeLine clorg = code[n];
     if (clorg.instruction == "nop")
@@ -66,9 +80,7 @@ void Task8::solve2() {
 
     while (true) {
       if (pc >= code.size()) {
-        std::cout << "Acc value: " << val << std::endl;
-        //return;
-        break;
+        return val;
       }
       if (pc < 0)
         break;
@@ -93,4 +105,5 @@ void Task8::solve2() {
     for (int n = 0; n < code.size(); n++)
       code[n].count=0;
   }
+  return 0;
 }

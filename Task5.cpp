@@ -7,8 +7,11 @@
 #include <fstream>
 #include <iostream>
 #include <algorithm>
-Task5::Task5() {
-  std::fstream fs("../data5.txt");
+#include "utils.h"
+
+Task5::Task5(bool example) {
+  example_data = example;
+  std::fstream fs(example_data ? "../data5_example.txt" : "../data5_task.txt");
   std::string line;
   while(std::getline(fs, line)) {
     entries.push_back(line);
@@ -23,7 +26,11 @@ void Task5::solve1() {
     ids.push_back(seatPositions[i].id);
   }
   std::sort(ids.begin(), ids.end());
-  std::cout << "Highest id: " << ids.back() << std::endl;
+
+  int result = ids.back();
+  // Example data and result is from www, but there wasnt exact sample data.
+  verify_result(result, example_data ? 820 : 892);
+  std::cout << " part1: highest seat id = " << result << std::endl;
 }
 
 void Task5::solve2() {
@@ -33,13 +40,21 @@ void Task5::solve2() {
             [](const auto& sp1, const auto& sp2) { return sp1.id < sp2.id;  } );
   SeatPos lastSp = seatPositions[0];
 
+  int result = 0;
+
   for (int id = 1; id < 8*128; ++id) {
     if (!isTaken(id, seatPositions))
     {
-      if (isTaken(id - 1, seatPositions) && isTaken(id + 1, seatPositions))
-        std::cout << id << std::endl;
+      if (isTaken(id - 1, seatPositions) && isTaken(id + 1, seatPositions)) {
+        result = id;
+        break;
+      }
     }
   }
+
+  // There was no example data result on www
+  verify_result(result, example_data ? 0 : 625);
+  std::cout << " part2: highest seat id = " << result << std::endl;
 }
 
 void Task5::computeSeats(std::vector<SeatPos>& vec) {

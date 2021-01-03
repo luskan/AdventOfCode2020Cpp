@@ -15,8 +15,12 @@ class Task8 {
     int count;
   };
   std::vector<CodeLine> code;
+  bool example_data;
+
+  int ComputeSolve1();
+  int ComputeSolve2();
 public:
-  Task8();
+  Task8(bool example);
   void solve1();
   void solve2();
 };

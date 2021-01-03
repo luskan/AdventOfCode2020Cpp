@@ -8,10 +8,14 @@
 #include <vector>
 #include <stdint.h>
 class task9 {
-  std::vector<uint32_t> entries;
+  std::vector<uint64_t> entries;
+  bool example_data;
+
+  unsigned long findSolve1();
+  unsigned long findSolve2();
 public:
-  task9();
-  unsigned long solve1();
+  task9(bool example);
+  void solve1();
   void solve2();
 };
 

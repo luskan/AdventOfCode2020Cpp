@@ -66,42 +66,79 @@ int main() {
     task4b.solve1();
     task4b.solve2();
 
-  return 0;
-    std::cout << "Task5" << std::endl;
-    Task5 task5;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task5 - example data" << std::endl;
+    Task5 task5(true);
     task5.solve1();
     task5.solve2();
+    std::cout << "Task5 - task data" << std::endl;
+    Task5 task5b(false);
+    task5b.solve1();
+    task5b.solve2();
 
-    std::cout << "Task6" << std::endl;
-    Task6 task6;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task6 - example data" << std::endl;
+    Task6 task6(true);
     task6.solve1();
     task6.solve2();
+    std::cout << "Task6 - task data" << std::endl;
+    Task6 task6b(false);
+    task6b.solve1();
+    task6b.solve2();
 
-    std::cout << "Task7" << std::endl;
-    Task7 task7;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task7 - example data" << std::endl;
+    Task7 task7(true);
     task7.solve1();
-    task7.solve2();
+    Task7 task7b(true, false);
+    task7b.solve2();
+    std::cout << "Task7 - task data" << std::endl;
+    Task7 task7c(false);
+    task7c.solve1();
+    task7c.solve2();
 
-    std::cout << "Task8" << std::endl;
-    Task8 task8;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task8 - example data" << std::endl;
+    Task8 task8(true);
     task8.solve1();
     task8.solve2();
+    std::cout << "Task8 - task data" << std::endl;
+    Task8 task8b(false);
+    task8b.solve1();
+    task8b.solve2();
 
-    std::cout << "Task9" << std::endl;
-    task9 task9;
-    task9.solve1();
-    task9.solve2();
 
-    std::cout << "Task10" << std::endl;
-    task10 task10;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task9 - example data" << std::endl;
+    task9 task9a{true};
+    task9a.solve1();
+    task9a.solve2();
+    std::cout << "Task9 - task data" << std::endl;
+    task9 task9b{false};
+    task9b.solve1();
+    task9b.solve2();
+
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task10 - example data" << std::endl;
+    Task10 task10{true};
     task10.solve1();
-    task10.solve2b();
+    task10.solve2();
+    std::cout << "Task10 - task data" << std::endl;
+    Task10 task10b{false};
+    task10b.solve1();
+    task10b.solve2();
 
-    std::cout << "Task11" << std::endl;
-    task11 task11;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task11 - example data" << std::endl;
+    Task11 task11(true);
     task11.solve1();
     task11.solve2();
+    std::cout << "Task11 - task data" << std::endl;
+    Task11 task11b(false);
+    task11b.solve1();
+    task11b.solve2();
 
+  return 0;
     std::cout << "Task12" << std::endl;
     task12 task12;
     task12.solve1();

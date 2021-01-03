@@ -17,8 +17,10 @@ class Task7 {
     std::map<std::string, int> bagsItCanContain; // bag color -> count
   };
   std::map<std::string, Bag> bags;
+  bool example_data;
+  bool for_part1;
 public:
-  Task7();
+  Task7(bool example, bool part1 = true);
   void solve1();
   void solve2();
 

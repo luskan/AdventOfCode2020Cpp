@@ -9,7 +9,7 @@
 #include <set>
 #include <algorithm>
 
-class task11 {
+class Task11 {
   using Row = std::vector<char>;
   std::vector<Row> room;
   char dummy = '?';
@@ -105,8 +105,9 @@ class task11 {
     return res;
   }
 
+  bool example_data;
 public:
-  task11();
+  Task11(bool example);
   void solve1();
   void solve2();
 };

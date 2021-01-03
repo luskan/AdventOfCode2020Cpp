@@ -17,8 +17,10 @@ class Task5 {
     int id;
   };
 
+  bool example_data;
+
 public:
-  Task5();
+  Task5(bool example);
   void solve1();
   void solve2();
 

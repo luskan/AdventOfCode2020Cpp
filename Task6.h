@@ -11,8 +11,9 @@
 class Task6 {
   using GroupData = std::vector<std::string>;
   std::vector<GroupData> groups;
+  bool example_data;
 public:
-  Task6();
+  Task6(bool example);
   void solve1();
   void solve2();
 
