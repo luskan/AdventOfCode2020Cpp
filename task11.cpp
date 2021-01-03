@@ -18,11 +18,12 @@ Task11::Task11(bool example) {
     for (size_t i = 0; i < line.size(); ++i) {
       row.push_back(line.at(i));
     }
-    room.push_back(row);
+    roomBase.push_back(row);
   }
 }
 
-void Task11::solve1() {
+void Task11::solve() {
+  std::vector<Row> room(roomBase);
   std::multiset<char> around;
   for(int it = 0; it < 100000; ++it) {
     int stateChanges = 0;
@@ -61,7 +62,7 @@ void Task11::solve1() {
   }
 
   if (part2) {
-   // verify_result(occupied, example_data ? 26 : 2072);
+    verify_result(occupied, example_data ? 26 : 2072);
     std::cout << " part2: occupied = " << occupied << std::endl;
   }
   else {
@@ -70,7 +71,99 @@ void Task11::solve1() {
   }
 }
 
+void Task11::solve1() {
+  solve();
+}
+
 void Task11::solve2() {
   part2 = true;
-  solve1();
+  solve();
+}
+std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::multiset<char> &res) {
+  res.clear();
+
+  if (part2) {
+
+    for (int x1=x - 1; x1 >= 0; --x1) {
+      char c = at(rm, x1, y);
+      if (c == '.')
+        continue;
+      res.insert(c);
+      break;
+    }
+
+    for (int x1=x + 1; x1 < rm[0].size(); ++x1) {
+      char c = at(rm, x1, y);
+      if (c == '.')
+        continue;
+      res.insert(c);
+      break;
+    }
+
+    for (int y1=y - 1; y1 >= 0; --y1) {
+      char c = at(rm, x, y1);
+      if (c == '.')
+        continue;
+      res.insert(c);
+      break;
+    }
+
+    for (int y1=y + 1; y1 < rm.size(); ++y1) {
+      char c = at(rm, x, y1);
+      if (c == '.')
+        continue;
+      res.insert(c);
+      break;
+    }
+
+    for (int x1=x - 1, y2=y-1; x1 >= 0 && y2 >= 0; --x1, --y2) {
+      char c = at(rm, x1, y2);
+      if (c == '.')
+        continue;
+      res.insert(c);
+      break;
+    }
+
+    for (int x1=x + 1, y2=y-1; x1 < rm[0].size() && y2 >= 0; ++x1, --y2) {
+      char c = at(rm, x1, y2);
+      if (c == '.')
+        continue;
+      res.insert(c);
+      break;
+    }
+
+    for (int x1=x + 1, y2=y+1; x1 < rm[0].size() && y2 < rm.size(); ++x1, ++y2) {
+      char c = at(rm, x1, y2);
+      if (c == '.')
+        continue;
+      res.insert(c);
+      break;
+    }
+
+    for (int x1=x - 1, y2=y+1; x1 >= 0 && y2 < rm.size(); --x1, ++y2) {
+      char c = at(rm, x1, y2);
+      if (c == '.')
+        continue;
+      res.insert(c);
+      break;
+    }
+  }
+  else {
+    res.insert(at(rm, x - 1, y - 1));
+    res.insert(at(rm, x, y - 1));
+    res.insert(at(rm, x + 1, y - 1));
+    res.insert(at(rm, x - 1, y));
+    res.insert(at(rm, x + 1, y));
+    res.insert(at(rm, x - 1, y + 1));
+    res.insert(at(rm, x, y + 1));
+    res.insert(at(rm, x + 1, y + 1));
+  }
+  return res;
+}
+char &Task11::at(std::vector<Row> &rm, int x, int y) {
+  if (x < 0 || y < 0)
+    return dummy;
+  if (x >= rm[0].size() || y >= rm.size())
+    return dummy;
+  return rm[y][x];
 }
