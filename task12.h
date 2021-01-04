@@ -7,14 +7,16 @@
 
 #include <vector>
 #include <string>
-class task12 {
+class Task12 {
     struct data {
         char type;
         int arg;
     };
     std::vector<data> entries;
+
+    bool example_data;
 public:
-    task12();
+    Task12(bool example);
     void solve1();
     void solve2();
 };

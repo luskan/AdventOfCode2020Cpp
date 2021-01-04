@@ -7,12 +7,12 @@
 
 #include <vector>
 
-class task15 {
-
+class Task15 {
+  bool example_data;
+  int findSolution(std::vector<int>, int);
 public:
-    task15();
+    Task15(bool example);
     void solve1();
-    int findSolution(std::vector<int>, int);
     void solve2();
 };
 

@@ -10,9 +10,11 @@
 #include <complex>
 
 #include <cmath>
+#include "utils.h"
 
-task12::task12() {
-    std::ifstream ifs("../data12.txt");
+Task12::Task12(bool example) {
+  example_data = example;
+    std::ifstream ifs(example ? "../data12_example.txt" : "../data12_task.txt");
     std::string line;
     std::regex rg(R"((\w)(\d+))");
     while(std::getline(ifs, line)) {
@@ -29,7 +31,7 @@ task12::task12() {
     }
 }
 
-void task12::solve1() {
+void Task12::solve1() {
     int x = 0;
     int y = 0;
     int course = 90;
@@ -81,10 +83,13 @@ void task12::solve1() {
                 throw "Invalid instruction!";
         }
     }
-    std::cout << "result: " << std::abs(x) + std::abs(y) << std::endl;
+
+    auto val = std::abs(x) + std::abs(y);
+    verify_result(val, example_data ? 25 : 1010);
+    std::cout << " part1: result = " << val << std::endl;
 }
 
-void task12::solve2() {
+void Task12::solve2() {
     int wp_x = 10;
     int wp_y = 1;
 
@@ -120,6 +125,8 @@ void task12::solve2() {
                 break;
         }
     }
-    //52742
-    std::cout << "result: " << std::abs(ship_x) + std::abs(ship_y) << std::endl;
+
+    auto val = std::abs(ship_x) + std::abs(ship_y);
+    verify_result(val, example_data ? 286 : 52742);
+    std::cout << " part2: result = " << val << std::endl;
 }

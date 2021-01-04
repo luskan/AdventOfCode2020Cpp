@@ -8,16 +8,17 @@
 #include <vector>
 #include <cstdint>
 
-class task13 {
+class Task13 {
     struct data {
         int id;
         int waitTime;
         uint64_t lastTsWithMatch;
     };
     int startTimestamp;
-    std::vector<data> entries;
+    std::vector<data> entriesBase;
+    bool example_data;
 public:
-    task13();
+    Task13(bool example);
     void solve1();
     void solve2();
 

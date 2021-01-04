@@ -8,14 +8,16 @@
 #include <vector>
 #include <string>
 
-class task14 {
+class Task14 {
     struct data {
         std::string mask;
         std::vector<std::tuple<uint64_t,uint64_t>> assings;
     };
     std::vector<data> entries;
+    bool example_data;
+    bool part2;
 public:
-    task14();
+    Task14(bool example, bool p2=false);
     void solve1();
     void solve2();
 };

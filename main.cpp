@@ -26,6 +26,7 @@
 
 int main() {
 #if 1
+  /*
     std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
     std::cout << "Task1 - example data" << std::endl;
     Task1 task1(true);
@@ -138,27 +139,50 @@ int main() {
     task11b.solve1();
     task11b.solve2();
 
-  return 0;
-    std::cout << "Task12" << std::endl;
-    task12 task12;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task12 - example data" << std::endl;
+    Task12 task12(true);
     task12.solve1();
     task12.solve2();
+    std::cout << "Task12 - test data" << std::endl;
+    Task12 task12b(false);
+    task12b.solve1();
+    task12b.solve2();
 
-    std::cout << "Task13" << std::endl;
-    task13 task13;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task13 - example data" << std::endl;
+    Task13 task13(true);
     task13.solve1();
     task13.solve2();
+    std::cout << "Task13 - task data" << std::endl;
+    Task13 task13b(false);
+    task13b.solve1();
+    task13b.solve2();
 
-    std::cout << "Task14" << std::endl;
-    task14 task14;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task14 - example data" << std::endl;
+    Task14 task14(true);
     task14.solve1();
-    task14.solve2();
+    Task14 task14b(true, true);
+    task14b.solve2();
+    std::cout << "Task14 - task data" << std::endl;
+    Task14 task14c(false);
+    task14c.solve1();
+    task14c.solve2();
+*/
 
-    std::cout << "Task15" << std::endl;
-    task15 task15;
+    std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+    std::cout << "Task15 - example data" << std::endl;
+    Task15 task15(true);
     task15.solve1();
+    std::cout << "!!! this is slow under debug mode, better run in release." << std::endl;
     task15.solve2();
+    std::cout << "Task15 - task data" << std::endl;
+    Task15 task15b(false);
+    task15b.solve1();
+    task15b.solve2();
 
+  return 0;
     std::cout << "Task16" << std::endl;
     task16 task16;
     task16.solve1();
