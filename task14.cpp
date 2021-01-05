@@ -13,7 +13,7 @@
 Task14::Task14(bool example, bool p2) {
   example_data = example;
   part2 = p2;
-  std::ifstream ifs(example ? (!p2 ? "../data14_example.txt" : "../data14_example_part2.txt") : "../data14_task.txt");
+  std::ifstream ifs(example ? (!p2 ? "../data/data14_example.txt" : "../data/data14_example_part2.txt") : "../data/data14_task.txt");
   std::string line;
 
   std::regex rg_mask(R"(mask = ([01X]+))");

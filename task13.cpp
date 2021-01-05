@@ -11,7 +11,7 @@
 
 Task13::Task13(bool example) {
   example_data = example;
-  std::ifstream ifs(example_data ? "../data13_example.txt" : "../data13_task.txt");
+  std::ifstream ifs(example_data ? "../data/data13_example.txt" : "../data/data13_task.txt");
   std::string line;
   if (std::getline(ifs, line)) {
     startTimestamp = std::stoi(line);
@@ -37,17 +37,16 @@ void Task13::solve1() {
     int busId = entries[i].id;
     if (busId == -1)
       continue;
-    int time1 = startTimestamp%busId;
+    int time1 = startTimestamp % busId;
     if (time1 == 0) {
       entries[i].waitTime = 0;
-    }
-    else {
+    } else {
       entries[i].waitTime = busId - time1;
     }
   }
-  entries.erase(std::remove_if(entries.begin(), entries.end(), [](auto& it){return it.id<0;}), entries.end());
+  entries.erase(std::remove_if(entries.begin(), entries.end(), [](auto &it) { return it.id < 0; }), entries.end());
   auto it = std::min_element(entries.begin(), entries.end(),
-                             [](const auto& el1, const auto& el2){ return el1.waitTime < el2.waitTime; });
+                             [](const auto &el1, const auto &el2) { return el1.waitTime < el2.waitTime; });
 
   auto val = it->waitTime * it->id;
   verify_result(val, example_data ? 295 : 205);

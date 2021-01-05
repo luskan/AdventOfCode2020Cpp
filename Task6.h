@@ -12,7 +12,7 @@ class Task6 {
   using GroupData = std::vector<std::string>;
   std::vector<GroupData> groups;
   bool example_data;
-public:
+ public:
   Task6(bool example);
   void solve1();
   void solve2();
@@ -21,6 +21,5 @@ public:
 
   std::string computeUnique2(std::vector<std::string> &vector);
 };
-
 
 #endif //ADVENTOFCODE2020_TASK6_H

@@ -8,16 +8,16 @@
 #include <deque>
 #include <vector>
 
-class task18 {
-    using expr_t = std::deque<char>;
-    std::vector<expr_t> rpn_expressions;
-    void load(bool solve2);
-    uint64_t solve();
-public:
-    task18();
-    void solve1();
-    void solve2();
+class Task18 {
+  using expr_t = std::deque<char>;
+  std::vector<expr_t> rpn_expressions;
+  void load(bool solve2);
+  uint64_t solve();
+  bool example_data;
+ public:
+  Task18(bool example);
+  void solve1();
+  void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK18_H

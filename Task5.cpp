@@ -11,9 +11,9 @@
 
 Task5::Task5(bool example) {
   example_data = example;
-  std::fstream fs(example_data ? "../data5_example.txt" : "../data5_task.txt");
+  std::fstream fs(example_data ? "../data/data5_example.txt" : "../data/data5_task.txt");
   std::string line;
-  while(std::getline(fs, line)) {
+  while (std::getline(fs, line)) {
     entries.push_back(line);
   }
 }
@@ -37,14 +37,13 @@ void Task5::solve2() {
   std::vector<SeatPos> seatPositions;
   computeSeats(seatPositions);
   std::sort(seatPositions.begin(), seatPositions.end(),
-            [](const auto& sp1, const auto& sp2) { return sp1.id < sp2.id;  } );
+            [](const auto &sp1, const auto &sp2) { return sp1.id < sp2.id; });
   SeatPos lastSp = seatPositions[0];
 
   int result = 0;
 
-  for (int id = 1; id < 8*128; ++id) {
-    if (!isTaken(id, seatPositions))
-    {
+  for (int id = 1; id < 8 * 128; ++id) {
+    if (!isTaken(id, seatPositions)) {
       if (isTaken(id - 1, seatPositions) && isTaken(id + 1, seatPositions)) {
         result = id;
         break;
@@ -57,7 +56,7 @@ void Task5::solve2() {
   std::cout << " part2: highest seat id = " << result << std::endl;
 }
 
-void Task5::computeSeats(std::vector<SeatPos>& vec) {
+void Task5::computeSeats(std::vector<SeatPos> &vec) {
   SeatPos sp;
   for (int n = 0; n < entries.size(); ++n) {
     auto s = entries[n];
@@ -68,8 +67,8 @@ void Task5::computeSeats(std::vector<SeatPos>& vec) {
   }
 }
 
-int Task5::binaryPos(const char* begin,
-                     const char* end,
+int Task5::binaryPos(const char *begin,
+                     const char *end,
                      char firstHalfChar, char secondHalfChar, int range) {
   int first = 0;
   int second = range;
@@ -87,5 +86,5 @@ int Task5::binaryPos(const char* begin,
 
 bool Task5::isTaken(int id, std::vector<SeatPos> &seatPositions) {
   return std::find_if(seatPositions.begin(), seatPositions.end(),
-               [=](const auto& sp){ return sp.id == id; }) != seatPositions.end();
+                      [=](const auto &sp) { return sp.id == id; }) != seatPositions.end();
 }

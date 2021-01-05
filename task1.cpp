@@ -10,7 +10,7 @@
 
 Task1::Task1(bool example) {
   example_data = example;
-  std::ifstream ifs(example ? "../data1_example.txt" : "../data1_task.txt");
+  std::ifstream ifs(example ? "../data/data1_example.txt" : "../data/data1_task.txt");
   std::string line;
   while (std::getline(ifs, line)) {
     input.push_back(std::stoi(line));

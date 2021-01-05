@@ -11,9 +11,9 @@
 
 Task11::Task11(bool example) {
   example_data = example;
-  std::ifstream ifs(example ? "../data11_example.txt" : "../data11_task.txt");
+  std::ifstream ifs(example ? "../data/data11_example.txt" : "../data/data11_task.txt");
   std::string line;
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     Row row;
     for (size_t i = 0; i < line.size(); ++i) {
       row.push_back(line.at(i));
@@ -25,21 +25,20 @@ Task11::Task11(bool example) {
 void Task11::solve() {
   std::vector<Row> room(roomBase);
   std::multiset<char> around;
-  for(int it = 0; it < 100000; ++it) {
+  for (int it = 0; it < 100000; ++it) {
     int stateChanges = 0;
     std::vector<Row> roomCopy = room;
     for (int x = 0; x < room[0].size(); ++x) {
       for (int y = 0; y < room.size(); ++y) {
         if (at(room, x, y) == 'L') {
           atAround(room, x, y, around);
-          if ( around.count('#') == 0 ) {
+          if (around.count('#') == 0) {
             at(roomCopy, x, y) = '#';
             ++stateChanges;
           }
-        }
-        else if (at(room, x, y) == '#') {
+        } else if (at(room, x, y) == '#') {
           atAround(room, x, y, around);
-          if (around.count('#') >= (part2 ? 5 :4)) {
+          if (around.count('#') >= (part2 ? 5 : 4)) {
             at(roomCopy, x, y) = 'L';
             ++stateChanges;
           }
@@ -55,8 +54,8 @@ void Task11::solve() {
 
   int occupied = 0;
   for (int y = 0; y < room.size(); ++y) {
-    for (int x =0; x < room[0].size(); ++x) {
-      if(at(room, x, y) == '#')
+    for (int x = 0; x < room[0].size(); ++x) {
+      if (at(room, x, y) == '#')
         occupied++;
     }
   }
@@ -64,10 +63,9 @@ void Task11::solve() {
   if (part2) {
     verify_result(occupied, example_data ? 26 : 2072);
     std::cout << " part2: occupied = " << occupied << std::endl;
-  }
-  else {
+  } else {
     verify_result(occupied, example_data ? 37 : 2354);
-    std::cout <<" part1: occupied = " << occupied << std::endl;
+    std::cout << " part1: occupied = " << occupied << std::endl;
   }
 }
 
@@ -84,7 +82,7 @@ std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::m
 
   if (part2) {
 
-    for (int x1=x - 1; x1 >= 0; --x1) {
+    for (int x1 = x - 1; x1 >= 0; --x1) {
       char c = at(rm, x1, y);
       if (c == '.')
         continue;
@@ -92,7 +90,7 @@ std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::m
       break;
     }
 
-    for (int x1=x + 1; x1 < rm[0].size(); ++x1) {
+    for (int x1 = x + 1; x1 < rm[0].size(); ++x1) {
       char c = at(rm, x1, y);
       if (c == '.')
         continue;
@@ -100,7 +98,7 @@ std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::m
       break;
     }
 
-    for (int y1=y - 1; y1 >= 0; --y1) {
+    for (int y1 = y - 1; y1 >= 0; --y1) {
       char c = at(rm, x, y1);
       if (c == '.')
         continue;
@@ -108,7 +106,7 @@ std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::m
       break;
     }
 
-    for (int y1=y + 1; y1 < rm.size(); ++y1) {
+    for (int y1 = y + 1; y1 < rm.size(); ++y1) {
       char c = at(rm, x, y1);
       if (c == '.')
         continue;
@@ -116,7 +114,7 @@ std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::m
       break;
     }
 
-    for (int x1=x - 1, y2=y-1; x1 >= 0 && y2 >= 0; --x1, --y2) {
+    for (int x1 = x - 1, y2 = y - 1; x1 >= 0 && y2 >= 0; --x1, --y2) {
       char c = at(rm, x1, y2);
       if (c == '.')
         continue;
@@ -124,7 +122,7 @@ std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::m
       break;
     }
 
-    for (int x1=x + 1, y2=y-1; x1 < rm[0].size() && y2 >= 0; ++x1, --y2) {
+    for (int x1 = x + 1, y2 = y - 1; x1 < rm[0].size() && y2 >= 0; ++x1, --y2) {
       char c = at(rm, x1, y2);
       if (c == '.')
         continue;
@@ -132,7 +130,7 @@ std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::m
       break;
     }
 
-    for (int x1=x + 1, y2=y+1; x1 < rm[0].size() && y2 < rm.size(); ++x1, ++y2) {
+    for (int x1 = x + 1, y2 = y + 1; x1 < rm[0].size() && y2 < rm.size(); ++x1, ++y2) {
       char c = at(rm, x1, y2);
       if (c == '.')
         continue;
@@ -140,15 +138,14 @@ std::multiset<char> &Task11::atAround(std::vector<Row> &rm, int x, int y, std::m
       break;
     }
 
-    for (int x1=x - 1, y2=y+1; x1 >= 0 && y2 < rm.size(); --x1, ++y2) {
+    for (int x1 = x - 1, y2 = y + 1; x1 >= 0 && y2 < rm.size(); --x1, ++y2) {
       char c = at(rm, x1, y2);
       if (c == '.')
         continue;
       res.insert(c);
       break;
     }
-  }
-  else {
+  } else {
     res.insert(at(rm, x - 1, y - 1));
     res.insert(at(rm, x, y - 1));
     res.insert(at(rm, x + 1, y - 1));

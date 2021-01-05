@@ -10,11 +10,10 @@
 class Task15 {
   bool example_data;
   int findSolution(std::vector<int>, int);
-public:
-    Task15(bool example);
-    void solve1();
-    void solve2();
+ public:
+  Task15(bool example);
+  void solve1();
+  void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK15_H

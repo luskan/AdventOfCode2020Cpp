@@ -18,11 +18,10 @@ struct PasswordEntry {
 class Task2 {
   std::vector<PasswordEntry> entries;
   bool example_data;
-public:
+ public:
   Task2(bool example);
   void solve1();
   void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK2_H

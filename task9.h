@@ -13,11 +13,10 @@ class task9 {
 
   unsigned long findSolve1();
   unsigned long findSolve2();
-public:
+ public:
   task9(bool example);
   void solve1();
   void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK9_H

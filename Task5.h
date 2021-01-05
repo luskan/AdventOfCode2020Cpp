@@ -19,19 +19,18 @@ class Task5 {
 
   bool example_data;
 
-public:
+ public:
   Task5(bool example);
   void solve1();
   void solve2();
 
-  void computeSeats(std::vector<SeatPos>& vec);
+  void computeSeats(std::vector<SeatPos> &vec);
 
-  int binaryPos(const char* begin,
-                const char* end,
+  int binaryPos(const char *begin,
+                const char *end,
                 char firstHalfChar, char secondHalfChar, int range);
 
   bool isTaken(int id, std::vector<SeatPos> &vector);
 };
-
 
 #endif //ADVENTOFCODE2020_TASK5_H

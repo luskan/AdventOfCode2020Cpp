@@ -10,11 +10,11 @@
 
 Task8::Task8(bool example) {
   example_data = example;
-  std::ifstream ifs(example ? "../data8_example.txt" : "../data8_task.txt");
+  std::ifstream ifs(example ? "../data/data8_example.txt" : "../data/data8_task.txt");
   std::string line;
   //jmp -612
   std::regex rg(R"((\w+) ([-+][0-9]+))", std::regex_constants::ECMAScript | std::regex_constants::icase);
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     std::smatch sm;
     if (!std::regex_match(line, sm, rg))
       throw "Some wrong format!";
@@ -34,7 +34,7 @@ void Task8::solve1() {
 int Task8::ComputeSolve1() {
   int val = 0;
   int pc = 0;
-  while(true) {
+  while (true) {
     if (pc >= code.size())
       break;
     if (pc < 0)
@@ -46,11 +46,9 @@ int Task8::ComputeSolve1() {
     cl.count++;
     if (cl.instruction == "nop") {
 
-    }
-    else if (cl.instruction == "acc") {
+    } else if (cl.instruction == "acc") {
       val += cl.arg;
-    }
-    else if (cl.instruction == "jmp") {
+    } else if (cl.instruction == "jmp") {
       pc += cl.arg;
       continue;
     }
@@ -103,7 +101,7 @@ int Task8::ComputeSolve2() {
     }
     code[n] = clorg;
     for (int n = 0; n < code.size(); n++)
-      code[n].count=0;
+      code[n].count = 0;
   }
   return 0;
 }

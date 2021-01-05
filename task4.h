@@ -13,7 +13,7 @@ class Task4 {
   using PassportData = std::map<std::string, std::string>;
   std::vector<PassportData> allPassports;
   bool example_data;
-public:
+ public:
   Task4(bool example);
 
   void solve1();
@@ -24,6 +24,5 @@ public:
 
   void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK4_H

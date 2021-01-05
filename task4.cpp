@@ -10,14 +10,14 @@
 
 Task4::Task4(bool example) {
   example_data = example;
-  std::ifstream ifs(example_data ? "../data4_example.txt" : "../data4_task.txt");
+  std::ifstream ifs(example_data ? "../data/data4_example.txt" : "../data/data4_task.txt");
   std::string line;
 
-  std::regex regLine{ R"((\w+):([#\w\d]+))",
-                      std::regex_constants::ECMAScript | std::regex_constants::icase};
+  std::regex regLine{R"((\w+):([#\w\d]+))",
+      std::regex_constants::ECMAScript | std::regex_constants::icase};
 
   PassportData pd;
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     if (line.size() == 0) {
       allPassports.push_back(pd);
       pd.clear();
@@ -34,7 +34,6 @@ Task4::Task4(bool example) {
   }
   allPassports.push_back(pd);
 }
-
 
 int Task4::countCorrect(bool validate) {
   int correct = 0;
@@ -85,7 +84,7 @@ bool Task4::isValid(std::map<std::string, std::string> &map) {
   //  If cm, the number must be at least 150 and at most 193.
   //  If in, the number must be at least 59 and at most 76.
   std::smatch sm;
-  if (std::regex_match(map["hgt"], sm,std::regex(R"((\d+)(cm|in))"))) {
+  if (std::regex_match(map["hgt"], sm, std::regex(R"((\d+)(cm|in))"))) {
     tmp = std::stoi(sm[1]);
     if (sm[2] == "cm")
       if (tmp < 150 || tmp > 193)
@@ -93,8 +92,7 @@ bool Task4::isValid(std::map<std::string, std::string> &map) {
     if (sm[2] == "in")
       if (tmp < 59 || tmp > 76)
         return false;
-  }
-  else {
+  } else {
     return false;
   }
 

@@ -16,12 +16,12 @@ using TerrainRow = std::vector<TerrainSquare>;
 class Task3 {
   std::vector<TerrainRow> terrain;
   bool example_data;
-public:
+ public:
   Task3(bool example);
-  TerrainSquare& get(int x, int y) {
+  TerrainSquare &get(int x, int y) {
     if (y >= terrain.size())
       throw "Y is to high!";
-    TerrainRow & row = terrain[y];
+    TerrainRow &row = terrain[y];
     return row[x % row.size()];
   }
   int GetMaxY() const { return terrain.size(); }
@@ -29,6 +29,5 @@ public:
   void Solve1();
   void Solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK3_H

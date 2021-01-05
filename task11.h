@@ -15,17 +15,16 @@ class Task11 {
   char dummy = '?';
   bool part2 = false;
 
-  char& at(std::vector<Row>& rm, int x, int y);
-  std::multiset<char>& atAround(std::vector<Row>& rm, int x, int y, std::multiset<char>& res);
+  char &at(std::vector<Row> &rm, int x, int y);
+  std::multiset<char> &atAround(std::vector<Row> &rm, int x, int y, std::multiset<char> &res);
 
   void solve();
 
   bool example_data;
-public:
+ public:
   Task11(bool example);
   void solve1();
   void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK11_H

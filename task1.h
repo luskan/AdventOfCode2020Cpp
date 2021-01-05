@@ -10,11 +10,10 @@
 class Task1 {
   bool example_data;
   std::vector<int> input;
-public:
+ public:
   Task1(bool example);
   void solve1();
   void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK1_H

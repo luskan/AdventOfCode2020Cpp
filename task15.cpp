@@ -11,8 +11,8 @@
 #include <array>
 #include "utils.h"
 
-Task15::Task15(bool b) {
-  example_data = b;
+Task15::Task15(bool example) {
+  example_data = example;
 }
 
 struct test_data {
@@ -33,13 +33,13 @@ void Task15::solve1() {
   */
 
   if (example_data) {
-    std::array<test_data, 5> tests = {{
-        {{2, 1, 3}, 2020, 10},
-        {{1, 2, 3}, 2020, 27},
-        {{2, 3, 1}, 2020, 78},
-        {{3, 2, 1}, 2020, 438},
-        {{3, 1, 2}, 2020, 1836}
-    }};
+    std::array tests = std::to_array<test_data>({
+                                                    {{2, 1, 3}, 2020, 10},
+                                                    {{1, 2, 3}, 2020, 27},
+                                                    {{2, 3, 1}, 2020, 78},
+                                                    {{3, 2, 1}, 2020, 438},
+                                                    {{3, 1, 2}, 2020, 1836}
+                                                });
 
     int n = 0;
     for (auto &t : tests) {

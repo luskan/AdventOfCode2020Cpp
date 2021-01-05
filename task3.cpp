@@ -9,9 +9,9 @@
 
 Task3::Task3(bool example) {
   example_data = example;
-  std::ifstream ifs(example_data ? "../data3_example.txt" : "../data3_task.txt");
+  std::ifstream ifs(example_data ? "../data/data3_example.txt" : "../data/data3_task.txt");
   std::string line;
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     TerrainRow row;
     for (std::size_t n = 0; n < line.size(); ++n) {
       TerrainSquare ts = {};
@@ -26,15 +26,15 @@ Task3::Task3(bool example) {
 }
 
 void Task3::Solve1() {
-  auto count = GetNumberOfTreesForSlope(3,1);
+  auto count = GetNumberOfTreesForSlope(3, 1);
   verify_result(count, example_data ? 7 : 193);
   std::cout << " part1: total trees: " << count << std::endl;
 }
 
 void Task3::Solve2() {
   int mul = 1;
-  int slopes[][2] ={ {1,1}, {3,1}, {5,1}, {7,1}, {1,2}};
-  for (int n = 0; n < sizeof(slopes)/sizeof(slopes[0]); ++n) {
+  int slopes[][2] = {{1, 1}, {3, 1}, {5, 1}, {7, 1}, {1, 2}};
+  for (int n = 0; n < sizeof(slopes) / sizeof(slopes[0]); ++n) {
     mul *= GetNumberOfTreesForSlope(slopes[n][0], slopes[n][1]);
   }
   verify_result(mul, example_data ? 336 : 1355323200);
@@ -45,12 +45,12 @@ int Task3::GetNumberOfTreesForSlope(int dx, int dy) {
   int trees = 0;
   int x = 0;
   int y = 0;
-  while(y < GetMaxY()) {
+  while (y < GetMaxY()) {
     x += dx;
     y += dy;
     if (y >= GetMaxY())
       break;
-    if (get(x,y).isTree)
+    if (get(x, y).isTree)
       trees++;
   }
   return trees;

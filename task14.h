@@ -9,18 +9,17 @@
 #include <string>
 
 class Task14 {
-    struct data {
-        std::string mask;
-        std::vector<std::tuple<uint64_t,uint64_t>> assings;
-    };
-    std::vector<data> entries;
-    bool example_data;
-    bool part2;
-public:
-    Task14(bool example, bool p2=false);
-    void solve1();
-    void solve2();
+  struct data {
+    std::string mask;
+    std::vector<std::tuple<uint64_t, uint64_t>> assings;
+  };
+  std::vector<data> entries;
+  bool example_data;
+  bool part2;
+ public:
+  Task14(bool example, bool p2 = false);
+  void solve1();
+  void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK14_H

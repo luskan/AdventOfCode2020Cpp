@@ -12,16 +12,17 @@
 Task7::Task7(bool example, bool part1) {
   for_part1 = part1;
   example_data = example;
-  std::ifstream ifs(example_data ? (for_part1 ? "../data7_example.txt" : "../data7_example_part2.txt") : "../data7_task.txt");
+  std::ifstream
+      ifs(example_data ? (for_part1 ? "../data/data7_example.txt" : "../data/data7_example_part2.txt") : "../data/data7_task.txt");
   std::string line;
 
   // light lavender bags contain 5 clear teal bags, 2 wavy gold bags, 5 drab maroon bags, 2 posh cyan bags.
-  std::regex regStart{ R"(([\w\s]+?) bags contain )",
-                      std::regex_constants::ECMAScript | std::regex_constants::icase};
-  std::regex regIns{ R"((\d+) ([\w\s]+?) bags?[,.])",
-                       std::regex_constants::ECMAScript | std::regex_constants::icase};
+  std::regex regStart{R"(([\w\s]+?) bags contain )",
+      std::regex_constants::ECMAScript | std::regex_constants::icase};
+  std::regex regIns{R"((\d+) ([\w\s]+?) bags?[,.])",
+      std::regex_constants::ECMAScript | std::regex_constants::icase};
 
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     std::smatch m1;
     if (!std::regex_search(line, m1, regStart))
       throw "Something wrong!";
@@ -70,7 +71,7 @@ void Task7::solve2() {
   Bag bag = bags["shiny gold"];
   std::multiset<std::string> all;
   for (auto bagc : bag.bagsItCanContain) {
-    for (int n = 0;n < bagc.second; ++n) {
+    for (int n = 0; n < bagc.second; ++n) {
       all.insert(bagc.first);
       std::multiset<std::string> path = findPathDown(bagc.first);
       all.merge(path);
@@ -96,7 +97,7 @@ std::multiset<std::string> Task7::findPathDown(std::string bagColor) {
   std::multiset<std::string> path;
   Bag bag = bags[bagColor];
   for (auto bagc : bag.bagsItCanContain) {
-    for (int n = 0;n < bagc.second; ++n) {
+    for (int n = 0; n < bagc.second; ++n) {
       path.insert(bagc.first);
       auto resVec = findPathDown(bagc.first);
       path.merge(resVec);

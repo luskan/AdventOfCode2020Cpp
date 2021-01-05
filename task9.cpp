@@ -13,9 +13,9 @@
 
 task9::task9(bool example) {
   example_data = example;
-  std::ifstream ifs(example_data ? "../data9_example.txt" : "../data9_task.txt");
+  std::ifstream ifs(example_data ? "../data/data9_example.txt" : "../data/data9_task.txt");
   std::string line;
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     entries.push_back(std::stoull(line));
   }
 }

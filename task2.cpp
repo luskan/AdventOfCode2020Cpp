@@ -10,14 +10,14 @@
 
 Task2::Task2(bool example) {
   example_data = example;
-  std::ifstream ifs(example_data ? "../data2_example.txt" : "../data2_task.txt");
+  std::ifstream ifs(example_data ? "../data/data2_example.txt" : "../data/data2_task.txt");
   std::string line;
 
   // 9-12 q: qqqxhnhdmqqqqjz
-  std::regex regLine{ R"((\d+)-(\d+) (\w): (\w+))",
-                          std::regex_constants::ECMAScript | std::regex_constants::icase};
+  std::regex regLine{R"((\d+)-(\d+) (\w): (\w+))",
+      std::regex_constants::ECMAScript | std::regex_constants::icase};
 
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     std::smatch m;
     if (!std::regex_search(line, m, regLine))
       throw "Wrong parsing!";
@@ -35,7 +35,7 @@ Task2::Task2(bool example) {
 
 void Task2::solve1() {
   int valid = 0;
-  for (auto& pe : entries) {
+  for (auto &pe : entries) {
     int count = std::count(pe.password.begin(), pe.password.end(), pe.c);
     if (count >= pe.min && count <= pe.max)
       valid++;
@@ -46,12 +46,12 @@ void Task2::solve1() {
 
 void Task2::solve2() {
   int valid = 0;
-  for (auto& pe : entries) {
+  for (auto &pe : entries) {
     int pos1 = pe.min - 1;
     int pos2 = pe.max - 1;
-    if ( pos1 >= pe.password.size() )
+    if (pos1 >= pe.password.size())
       continue;
-    if ( pos2 >= pe.password.size() )
+    if (pos2 >= pe.password.size())
       continue;
 
     int check1 = pe.password[pos1] == pe.c ? 1 : 0;

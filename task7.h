@@ -19,7 +19,7 @@ class Task7 {
   std::map<std::string, Bag> bags;
   bool example_data;
   bool for_part1;
-public:
+ public:
   Task7(bool example, bool part1 = true);
   void solve1();
   void solve2();
@@ -27,6 +27,5 @@ public:
   std::set<std::string> findPathUp(std::string bagColor);
   std::multiset<std::string> findPathDown(std::string bagColor);
 };
-
 
 #endif //ADVENTOFCODE2020_TASK7_H

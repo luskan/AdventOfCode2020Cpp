@@ -11,22 +11,23 @@
 #include <unordered_map>
 
 struct data {
-    bool final = false;
-    char c = '?';
-    std::vector<std::vector<int>> rules;
+  bool final = false;
+  char c = '?';
+  std::vector<std::vector<int>> rules;
 };
 
-class task19 {
-    std::regex rg;
-    std::vector<std::string> test_strings;
-    std::unordered_map<int, data> rules;
-public:
-    task19();
-    void solve1();
-    void solve2();
+class Task19 {
+  std::regex rg;
+  std::vector<std::string> test_strings;
+  std::unordered_map<int, data> rules;
+  bool example_data;
+  bool solve_2;
+ public:
+  Task19(bool example, bool s2);
+  void solve1();
+  void solve2();
 
-    std::string build_rules(const std::unordered_map<int, data>& map, int index, int depth = 0);
+  std::string build_rules(const std::unordered_map<int, data> &map, int index, int depth = 0);
 };
-
 
 #endif //ADVENTOFCODE2020_TASK19_H

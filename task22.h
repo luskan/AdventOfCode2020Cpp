@@ -9,16 +9,17 @@
 #include <unordered_set>
 #include <set>
 
-class task22 {
-    std::deque<int> player1_org;
-    std::deque<int> player2_org;
-public:
-    task22();
-    void solve1();
-    void solve2();
+class Task22 {
+  std::deque<int> player1_org;
+  std::deque<int> player2_org;
 
-    void recurive_combat(std::deque<int> &player1, std::deque<int> &player2, bool &player1wins);
+  bool example_data;
+ public:
+  Task22(bool example);
+  void solve1();
+  void solve2();
+
+  void recurive_combat(std::deque<int> &player1, std::deque<int> &player2, bool &player1wins);
 };
-
 
 #endif //ADVENTOFCODE2020_TASK22_H

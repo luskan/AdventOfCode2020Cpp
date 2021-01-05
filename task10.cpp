@@ -12,9 +12,9 @@
 
 Task10::Task10(bool example) {
   example_data = example;
-  std::ifstream ifs(example_data ? "../data10_example.txt" : "../data10_task.txt");
+  std::ifstream ifs(example_data ? "../data/data10_example.txt" : "../data/data10_task.txt");
   std::string line;
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     int v = std::stoi(line);
     entries.push_back(v);
   }
@@ -29,7 +29,7 @@ void Task10::solve1() {
   auto oneDiffs = std::count_if(diffs.begin(), diffs.end(), [](auto v) { return v == 1; });
   auto threeDiffs = std::count_if(diffs.begin(), diffs.end(), [](auto v) { return v == 3; });
 
-  auto val = oneDiffs*threeDiffs;
+  auto val = oneDiffs * threeDiffs;
   verify_result(val, example_data ? 220 : 2590);
   std::cout << " part1: value= " << val << std::endl;
 }
@@ -39,31 +39,30 @@ void Task10::solve2() {
   std::vector<int> ents = entries;
   computeDiffs(ents, diffs);
 
-    uint64_t wtj = 1;
+  uint64_t wtj = 1;
 
-   std::vector<int> subDiffs;
-   for (size_t i = 0; i < diffs.size() ; ++i) {
-     if (diffs[i] == 3)
-       continue;
-     subDiffs.clear();
-     for (size_t k = i; k < diffs.size() ;++k) {
-       if (diffs[k] == 3) {
-         subDiffs.push_back(diffs[k]);
-         wtj *= compute(0, subDiffs);
-         i = k;
-         break;
-       }
-       else {
-         subDiffs.push_back(diffs[k]);
-       }
-     }
-   }
+  std::vector<int> subDiffs;
+  for (size_t i = 0; i < diffs.size(); ++i) {
+    if (diffs[i] == 3)
+      continue;
+    subDiffs.clear();
+    for (size_t k = i; k < diffs.size(); ++k) {
+      if (diffs[k] == 3) {
+        subDiffs.push_back(diffs[k]);
+        wtj *= compute(0, subDiffs);
+        i = k;
+        break;
+      } else {
+        subDiffs.push_back(diffs[k]);
+      }
+    }
+  }
 
   verify_result(wtj, example_data ? 19208ull : 226775649501184ull);
   std::cout << " part2: value= " << wtj << std::endl;
 }
 
-bool Task10::computeDiffs(std::vector<int>& inEntries, std::vector<int>& diffs) {
+bool Task10::computeDiffs(std::vector<int> &inEntries, std::vector<int> &diffs) {
   diffs.resize(inEntries.size(), 0);
   int curJoltage = 0;
   for (size_t n = 0; n < inEntries.size(); ++n) {
@@ -77,7 +76,7 @@ bool Task10::computeDiffs(std::vector<int>& inEntries, std::vector<int>& diffs) 
   return true;
 }
 
-uint64_t Task10::compute(int startFrom, std::vector<int>& diffs) {
+uint64_t Task10::compute(int startFrom, std::vector<int> &diffs) {
   uint64_t total = 1;
 
   for (size_t i = startFrom; i < diffs.size() - 1; ++i) {
@@ -88,7 +87,7 @@ uint64_t Task10::compute(int startFrom, std::vector<int>& diffs) {
       diffs[i + 1] += diff;
       diffs.erase(diffs.begin() + i);
 
-      total += compute(i,  diffs);
+      total += compute(i, diffs);
 
       diffs.insert(diffs.begin() + i, diff);
       diffs[i + 1] -= diff;

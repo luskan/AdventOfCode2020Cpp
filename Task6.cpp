@@ -12,10 +12,10 @@
 
 Task6::Task6(bool example) {
   example_data = example;
-  std::ifstream ifs(example_data ? "../data6_example.txt" : "../data6_task.txt");
+  std::ifstream ifs(example_data ? "../data/data6_example.txt" : "../data/data6_task.txt");
   std::string line;
   GroupData gd;
-  while(std::getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     if (line.size() == 0) {
       groups.push_back(gd);
       gd.clear();
@@ -83,7 +83,7 @@ std::string Task6::computeUnique2(std::vector<std::string> &v) {
           intersection.begin(), intersection.end(),
           vecs[i].begin(), vecs[i].end(),
           std::back_inserter(newIntersection)
-          );
+      );
       intersection = newIntersection;
     }
   }

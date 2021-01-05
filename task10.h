@@ -12,13 +12,12 @@ class Task10 {
   std::vector<int> entries;
   bool example_data;
 
-  bool computeDiffs(std::vector<int>& vector, std::vector<int>& vector1);
-  uint64_t compute(int startFrom,  std::vector<int>& diffs);
-public:
+  bool computeDiffs(std::vector<int> &vector, std::vector<int> &vector1);
+  uint64_t compute(int startFrom, std::vector<int> &diffs);
+ public:
   Task10(bool example);
   void solve1();
   void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK10_H

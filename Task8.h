@@ -19,11 +19,10 @@ class Task8 {
 
   int ComputeSolve1();
   int ComputeSolve2();
-public:
+ public:
   Task8(bool example);
   void solve1();
   void solve2();
 };
-
 
 #endif //ADVENTOFCODE2020_TASK8_H
