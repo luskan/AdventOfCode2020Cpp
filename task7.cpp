@@ -63,7 +63,7 @@ void Task7::solve1() {
     all.merge(path);
   }
 
-  verify_result(all.size(), example_data ? 4u : 300u);
+  verify_result(all.size(), example_data ? 4ul : 300ul);
   std::cout << " part1: total = " << all.size() << std::endl;
 }
 
@@ -78,7 +78,7 @@ void Task7::solve2() {
     }
   }
 
-  verify_result(all.size(), example_data ? 126u : 8030u);
+  verify_result(all.size(), example_data ? 126ul : 8030ul);
   std::cout << " part2: total = " << all.size() << std::endl;
 }
 

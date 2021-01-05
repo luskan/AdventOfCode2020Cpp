@@ -30,7 +30,7 @@ void Task10::solve1() {
   auto threeDiffs = std::count_if(diffs.begin(), diffs.end(), [](auto v) { return v == 3; });
 
   auto val = oneDiffs * threeDiffs;
-  verify_result(val, example_data ? 220 : 2590);
+  verify_result(val, example_data ? 220l : 2590l);
   std::cout << " part1: value= " << val << std::endl;
 }
 
