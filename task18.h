@@ -7,6 +7,7 @@
 
 #include <deque>
 #include <vector>
+#include <stdint.h>
 
 class Task18 {
   using expr_t = std::deque<char>;

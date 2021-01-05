@@ -7,6 +7,7 @@
 #include <string>
 #include "task1.h"
 #include "utils.h"
+#include <stdint.h>
 
 Task1::Task1(bool example) {
   example_data = example;

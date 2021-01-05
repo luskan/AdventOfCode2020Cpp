@@ -6,6 +6,7 @@
 #define ADVENTOFCODE2020_UTILS_H
 
 #include <string>
+#include <stdint.h>
 
 // function has to live in the std namespace
 // so that it is picked up by argument-dependent name lookup (ADL).
@@ -90,8 +91,8 @@ static inline std::string trim_copy(std::string s) {
   return s;
 }
 
-template<typename T>
-inline void verify_result(T result, T expected) {
+template<typename T, typename E>
+inline void verify_result(T result, E expected) {
   if (result != expected)
     throw "Invalid result!";
 }

@@ -34,7 +34,7 @@ void Task15::solve1() {
 
   if (example_data) {
     /*
-     // missing to_array: xcode clang is not c++20 feature ready?
+     // missing to_array: xcode clang is not c++20 feature ready? Only vs2019 was able to compile it.
     std::array tests = std::to_array<test_data>({
                                                     {{2, 1, 3}, 2020, 10},
                                                     {{1, 2, 3}, 2020, 27},

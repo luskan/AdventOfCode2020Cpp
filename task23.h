@@ -14,45 +14,47 @@
 #include <unordered_map>
 
 // Simple Ring collection, it is based on list and uses caching for fast finding of elements.
+
+template<typename ItColl>
+struct iterator {
+  ItColl *vec;
+  typename ItColl::iterator pos;
+  iterator() : vec(nullptr) {}
+  iterator(ItColl &vec, typename ItColl::iterator pos) : vec(&vec), pos(pos) {
+  }
+  iterator(const iterator &) = default;
+  bool operator==(const iterator &it) {
+    return it.pos == pos;
+  }
+  typename ItColl::value_type operator*() {
+    return *pos;
+  }
+  void operator++(int) {
+    pos++;
+    if (pos == vec->end())
+      pos = vec->begin();
+  }
+  iterator<ItColl> operator+(int i) {
+    typename ItColl::iterator new_pos = pos;
+
+    for (int k = 0; k < i; ++k) {
+      if (new_pos == vec->end())
+        new_pos = vec->begin();
+      new_pos++;
+    }
+    if (new_pos == vec->end())
+      new_pos = vec->begin();
+
+    return iterator(*vec, new_pos);
+  }
+};
+
+template<typename C> iterator(C, typename C::iterator) -> iterator<C>;
+
 template<typename T, typename Coll = std::list<T>>
 class RingQueue {
   Coll vec;
  public:
-  template<typename ItColl>
-  struct iterator {
-    ItColl *vec;
-    typename ItColl::iterator pos;
-    iterator() : vec(nullptr) {}
-    iterator(Coll &vec, typename ItColl::iterator pos) : vec(&vec), pos(pos) {
-    }
-    iterator(const iterator &) = default;
-    bool operator==(const iterator &it) {
-      return it.pos == pos;
-    }
-    T operator*() {
-      return *pos;
-    }
-    void operator++(int) {
-      pos++;
-      if (pos == vec->end())
-        pos = vec->begin();
-    }
-    iterator<ItColl> operator+(int i) {
-      typename ItColl::iterator new_pos = pos;
-
-      for (int k = 0; k < i; ++k) {
-        if (new_pos == vec->end())
-          new_pos = vec->begin();
-        new_pos++;
-      }
-      if (new_pos == vec->end())
-        new_pos = vec->begin();
-
-      return iterator(*vec, new_pos);
-    }
-  };
-
-  template<typename C> iterator(C, typename C::iterator) -> iterator<C>;
 
   std::unordered_map<T, iterator<Coll>> cache;
 

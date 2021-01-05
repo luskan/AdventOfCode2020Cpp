@@ -8,6 +8,7 @@
 #include <iostream>
 #include <regex>
 #include <map>
+#include <cmath>
 #include "utils.h"
 
 Task14::Task14(bool example, bool p2) {

@@ -96,13 +96,16 @@ void Task12::solve2() {
         break;
       case 'L':
       case 'R': {
-        std::complex pt(wp_x, wp_y);
+        // It looks like clang and g++ does rounding differently, results under clang and vs2019 were correct
+        // when std::complex<int> and no round() was used, g++ required to use complex<double> + round()
+        std::complex<double> pt(wp_x, wp_y);
         pt *= std::polar(1.0, (d.type == 'L' ? 1 : -1) * d.arg * M_PI / 180.0);
-        wp_x = pt.real();
-        wp_y = pt.imag();
+        wp_x = round(pt.real());
+        wp_y = round(pt.imag());
         break;
       }
-      case 'F':ship_x += d.arg * wp_x;
+      case 'F':
+        ship_x += d.arg * wp_x;
         ship_y += d.arg * wp_y;
         break;
     }

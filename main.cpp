@@ -25,7 +25,6 @@
 #include "Task24.h"
 
 int main() {
-
   std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
   std::cout << "Task1 - example data" << std::endl;
   Task1 task1(true);
