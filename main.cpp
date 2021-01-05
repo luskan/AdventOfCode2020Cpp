@@ -23,8 +23,10 @@
 #include "task22.h"
 #include "task23.h"
 #include "Task24.h"
+#include "Task25.h"
 
 int main() {
+  /*
   std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
   std::cout << "Task1 - example data" << std::endl;
   Task1 task1(true);
@@ -269,4 +271,15 @@ int main() {
   Task24 task24b(false);
   task24b.solve1();
   task24b.solve2();
+  */
+
+  std::cout << "+--- --- --- --- --- --- --- --- --- --- --- ---" << std::endl;
+  std::cout << "Task25 - example data" << std::endl;
+  Task25 task25(true);
+  task25.solve1();
+  task25.solve2();
+  std::cout << "Task25 - example data" << std::endl;
+  Task25 task25b(false);
+  task25b.solve1();
+  task25b.solve2();
 }
