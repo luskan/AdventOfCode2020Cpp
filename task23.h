@@ -56,35 +56,26 @@ class RingQueue {
   Coll vec;
  public:
 
-  std::unordered_map<T, iterator<Coll>> cache;
-
-  void verifyCache() {
-    for (auto&[val, it] : cache) {
-      if (val != *it)
-        throw "Cache integrity error!";
-    }
-    if (cache.size() != vec.size())
-      throw "Cache integrity error!";
-  }
+  std::vector<iterator<Coll>> index;
 
   RingQueue() {
   }
 
-  void resize(size_t count) {
-    vec.resize(count);
+  void reserve(size_t count) {
+    index.reserve(count);
   }
 
   iterator<Coll> erase(iterator<Coll> &it) {
-
-    auto cache_it = cache.find(*it);
-    if (cache_it == cache.end())
-      throw "Cache errorr";
-    cache.erase(cache_it);
+    index[*it] = iterator(vec, vec.end());
 
     auto new_it = vec.erase(it.pos);
     if (new_it == vec.end())
       new_it = vec.begin();
     return iterator(vec, new_it);
+  }
+
+  void splice(iterator<Coll> new_position, iterator<Coll> beg) {
+    vec.splice(new_position.pos, vec, beg.pos);
   }
 
   iterator<Coll> begin() {
@@ -95,7 +86,9 @@ class RingQueue {
     vec.push_back(t);
     auto end = vec.end();
     end--;
-    cache[t] = iterator(vec, end);
+    if (index.size() < t+1)
+      index.resize(t+1);
+    index[t] = iterator(vec, end);
   }
 
   iterator<Coll> insert(iterator<Coll> it, T t) {
@@ -105,7 +98,7 @@ class RingQueue {
       it_next = vec.begin();
     auto new_pos = vec.insert(it_next, t);
     auto it_res = iterator(vec, new_pos);
-    cache[t] = it_res;
+    index[t] = it_res;
     return it_res;
   }
 
@@ -121,18 +114,7 @@ class RingQueue {
   }
 
   iterator<Coll> find(T i, bool linearSearch = false) {
-    if (!linearSearch) {
-      auto cached_it = cache.find(i);
-      if (cached_it == cache.end())
-        throw "Cache error!";
-      else
-        return cached_it->second;
-    }
-
-    auto it = std::find(vec.begin(), vec.end(), i);
-    if (it == vec.end())
-      return end();
-    return iterator<Coll>(vec, it);
+    return index[i];
   }
 
   std::string dump() {

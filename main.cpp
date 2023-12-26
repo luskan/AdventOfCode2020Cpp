@@ -174,7 +174,6 @@ int main() {
   std::cout << "Task15 - example data" << std::endl;
   Task15 task15(true);
   task15.Solve1();
-  std::cout << "!!! this is slow under debug mode, better run in release." << std::endl;
   task15.Solve2();
   std::cout << "Task15 - task data" << std::endl;
   Task15 task15b(false);
